@@ -8,7 +8,7 @@ pipeline {
                }
             }
         }
-        stage('Unit Test & Integration Test') {
+        stage('Unit Test') {
             steps {
                script {
                    try {
