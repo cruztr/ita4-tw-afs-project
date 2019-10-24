@@ -4,9 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                script {
-                   try {
-                       sh './gradlew build' //run a gradle task
-                   }
+                    sh './gradlew build' //run a gradle task
                }
             }
         }
