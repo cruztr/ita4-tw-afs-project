@@ -25,7 +25,7 @@ public class ParkingBoyController {
         return parkingBoyService.save(parkingBoy);
     }
 
-    @PostMapping(value = "/login", produces = {"application/json"}, consumes = {"application/json"})
+    @GetMapping(value = "/login", produces = {"application/json"}, consumes = {"application/json"})
     public ParkingBoy login(@RequestBody ParkingBoy parkingBoy) throws InvalidCredentialsException {
         return parkingBoyService.login(parkingBoy.getUsername(), parkingBoy.getPassword());
     }
