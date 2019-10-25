@@ -1,4 +1,4 @@
-package ita.tw.afs.spark.entity;
+package ita.tw.afs.spark.model;
 
 
 import javax.persistence.*;
