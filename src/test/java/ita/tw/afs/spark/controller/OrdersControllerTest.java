@@ -17,10 +17,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,20 +47,30 @@ class OrdersControllerTest {
         orders.setTimeOut(null);
         orders.setCreatedBy(1L);
         orders.setClosedBy(null);
-        orders.setParkingLot(new ArrayList<>());
         return orders;
     }
-
 
     @Test
     void should_add_orders() throws Exception {
         when(ordersService.save(any(), anyLong())).thenReturn(createDummyOrder());
 
-        ResultActions result = mvc.perform(post("/orders/parkingLot/1")
+        ResultActions result = mvc.perform(post("/spark/parkingBoy/1/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(createDummyOrder())));
 
         result.andExpect(status().isCreated());
     }
+
+    @Test
+    void should_get_all_orders() throws Exception {
+        when(ordersService.getOrdersByPage(any())).thenReturn(Collections.singletonList(createDummyOrder()));
+
+        ResultActions result = mvc.perform(get("/spark/parkingBoy/1/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(createDummyOrder())));
+
+        result.andExpect(status().isOk());
+    }
+
 
 }

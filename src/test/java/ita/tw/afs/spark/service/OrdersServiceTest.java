@@ -44,7 +44,6 @@ class OrdersServiceTest {
         orders.setTimeOut(null);
         orders.setCreatedBy(1L);
         orders.setClosedBy(null);
-        orders.setParkingLot(new ArrayList<>());
     }
 
     @Test

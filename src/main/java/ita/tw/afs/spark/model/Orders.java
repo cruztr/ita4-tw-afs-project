@@ -10,12 +10,8 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<ParkingLot> parkingLot;
-
-    @Column(unique = true)
+    private Long parkingLotId;
     private String plateNumber;
-
     private String timeIn;
     private String timeOut;
     private Long createdBy;
@@ -24,20 +20,20 @@ public class Orders {
     public Orders() {
     }
 
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
     public Long getOrderId() {
         return orderId;
     }
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public List<ParkingLot> getParkingLot() {
-        return parkingLot;
-    }
-
-    public void setParkingLot(List<ParkingLot> parkingLot) {
-        this.parkingLot = parkingLot;
     }
 
     public String getPlateNumber() {
