@@ -19,16 +19,7 @@ public class ParkingLotController {
     private static final String PARKING_LOT_NOT_FOUND = "Parking Lot Not Found";
 
     @Autowired
-    private ParkingBlockService parkingBlockService;
-
-    @Autowired
     private ParkingLotService parkingLotService;
-
-    @GetMapping(value = "/{id}/parkingBlock", produces = {"application/json"})
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<ParkingBlock> getParkingBlocks(@PathVariable Long id) {
-        return parkingBlockService.getParkingLotSpaces(id);
-    }
 
     @PostMapping(produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.CREATED)

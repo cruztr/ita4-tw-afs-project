@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 public class ParkingBlock {
 
+    public static final String AVAILABLE = "AVAILABLE";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -16,6 +17,16 @@ public class ParkingBlock {
 
     public ParkingLot getParkingLot() {
         return parkingLot;
+    }
+
+    public ParkingBlock() {
+    }
+
+    public ParkingBlock(Long id, Integer position, ParkingLot parkingLot) {
+        this.id = id;
+        this.position = position;
+        this.status = AVAILABLE;
+        this.parkingLot = parkingLot;
     }
 
     public void setParkingLot(ParkingLot parkingLot) {

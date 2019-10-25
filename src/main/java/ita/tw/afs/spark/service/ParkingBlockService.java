@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingBlockService {
@@ -13,7 +14,11 @@ public class ParkingBlockService {
     @Autowired
     private ParkingBlockRepository parkingBlockRepository;
 
-    public List<ParkingBlock> getParkingLotSpaces(Long id) {
+    public List<ParkingBlock> getAll() {
         return parkingBlockRepository.findAll();
+    }
+
+    public Optional<ParkingBlock> getParkingBlock(Long id) {
+        return parkingBlockRepository.findById(id);
     }
 }
