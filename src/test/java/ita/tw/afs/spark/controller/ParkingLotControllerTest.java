@@ -18,9 +18,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -75,5 +77,26 @@ class ParkingLotControllerTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void should_return_parkingLot_when_get_specific_parkingLot() throws Exception {
+        when(parkingLotService.getParkingLot(1L)).thenReturn(Optional.of(new ParkingLot(1L, "MAAX", 20)));
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingLot/{id}", "1"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("MAAX")))
+                .andExpect(jsonPath("$.capacity", is(20)));
+    }
+
+    @Test
+    void should_raise_notFoundException_when_parkingLot_is_not_found() throws Exception {
+        when(parkingLotService.getParkingLot(1L)).thenReturn(Optional.of(new ParkingLot()));
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingLot/{id}", "2"));
+
+        resultActions.andExpect(status().isNotFound());
     }
 }

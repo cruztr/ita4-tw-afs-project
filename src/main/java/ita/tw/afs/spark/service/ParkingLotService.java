@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingLotService {
@@ -46,5 +47,9 @@ public class ParkingLotService {
             parkingBlockList.add(parkingBlock);
         }
         return parkingBlockList;
+    }
+
+    public Optional<ParkingLot> getParkingLot(Long id) {
+        return parkingLotRepo.findById(id);
     }
 }
