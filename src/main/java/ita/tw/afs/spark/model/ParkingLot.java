@@ -1,12 +1,12 @@
 package ita.tw.afs.spark.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ParkingLot {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -14,6 +14,13 @@ public class ParkingLot {
     private String name;
     private String location;
     private Integer capacity;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parkingLot")
+    private List<ParkingBlock> parkingBlocks;
+
+    public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
+        this.parkingBlocks = parkingBlocks;
+    }
 
     public ParkingLot() {
     }
