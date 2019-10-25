@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value ="/parkingBoy")
 public class ParkingBoyController {
 
@@ -24,7 +25,7 @@ public class ParkingBoyController {
         return parkingBoyService.save(parkingBoy);
     }
 
-    @GetMapping(value = "/login", produces = {"application/json"})
+    @PostMapping(value = "/login", produces = {"application/json"}, consumes = {"application/json"})
     public ParkingBoy login(@RequestBody ParkingBoy parkingBoy) throws InvalidCredentialsException {
         return parkingBoyService.login(parkingBoy.getUsername(), parkingBoy.getPassword());
     }

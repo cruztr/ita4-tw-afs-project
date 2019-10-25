@@ -25,6 +25,6 @@ public class ParkingBoyService {
         if (parkingBoyAccount != null) {
             return parkingBoyAccount;
         }
-        throw new InvalidCredentialsException();
+        throw new InvalidCredentialsException("Incorrect username/password.");
     }
 }
