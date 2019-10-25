@@ -10,5 +10,4 @@ public class SparkApplication {
 		SpringApplication.run(SparkApplication.class, args);
 	}
 
-
 }
