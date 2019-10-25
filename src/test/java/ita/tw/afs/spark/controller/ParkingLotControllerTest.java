@@ -19,9 +19,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -54,12 +57,23 @@ class ParkingLotControllerTest {
     @Test
     void should_return_status_created_when_create_parking_lot() throws Exception {
         ParkingLot parkingLot = new ParkingLot();
-        when(parkingLotService.save(parkingLot)).thenReturn(parkingLot);
+        when(parkingLotService.saveLotAndCreateBlocks(parkingLot)).thenReturn(parkingLot);
 
         ResultActions resultActions = mockMvc.perform(post("/parkingLot")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(parkingLot)));
 
         resultActions.andExpect(status().isCreated());
+    }
+
+
+    @Test
+    void should_return_list_of_parkingLots_when_get_all_parkingLots() throws Exception {
+        when(parkingLotService.getAll()).thenReturn(singletonList(new ParkingLot()));
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingLot"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
