@@ -1,9 +1,6 @@
 package ita.tw.afs.spark.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class ParkingBlock {
@@ -13,6 +10,17 @@ public class ParkingBlock {
     private Long id;
     private Integer position;
     private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ParkingLot parkingLot;
+
+    public ParkingLot getParkingLot() {
+        return parkingLot;
+    }
+
+    public void setParkingLot(ParkingLot parkingLot) {
+        this.parkingLot = parkingLot;
+    }
 
     public Long getId() {
         return id;
