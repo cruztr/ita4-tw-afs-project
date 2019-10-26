@@ -62,4 +62,8 @@ public class ParkingLot {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
+    public List<ParkingBlock> getParkingBlocks() {
+        return parkingBlocks;
+    }
 }
