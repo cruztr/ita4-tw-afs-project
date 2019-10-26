@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +51,7 @@ class OrdersControllerTest {
 
     @Test
     void should_add_orders() throws Exception {
-        when(ordersService.save(any(), anyLong())).thenReturn(createDummyOrder());
+        when(ordersService.saveOrderAndUpdateParkingBlockStatus(any(), anyLong())).thenReturn(createDummyOrder());
 
         ResultActions result = mvc.perform(post("/spark/parkingBoy/1/orders")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -11,21 +11,16 @@ public class Orders {
     private Long orderId;
 
     private Long parkingLotId;
+    private Integer parkingBlockPosition;
+    private Long reservationNumber;
     private String plateNumber;
+    private String status;
     private String timeIn;
     private String timeOut;
     private Long createdBy;
     private Long closedBy;
 
     public Orders() {
-    }
-
-    public Long getParkingLotId() {
-        return parkingLotId;
-    }
-
-    public void setParkingLotId(Long parkingLotId) {
-        this.parkingLotId = parkingLotId;
     }
 
     public Long getOrderId() {
@@ -36,12 +31,44 @@ public class Orders {
         this.orderId = orderId;
     }
 
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+    public Integer getParkingBlockPosition() {
+        return parkingBlockPosition;
+    }
+
+    public void setParkingBlockPosition(Integer parkingBlockPosition) {
+        this.parkingBlockPosition = parkingBlockPosition;
+    }
+
     public String getPlateNumber() {
         return plateNumber;
     }
 
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getReservationNumber() {
+        return reservationNumber;
+    }
+
+    public void setReservationNumber(Long reservationNumber) {
+        this.reservationNumber = reservationNumber;
     }
 
     public String getTimeIn() {

@@ -5,14 +5,11 @@ import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.repository.OrdersRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
-import static org.springframework.data.domain.PageRequest.of;
 
 @Service
 public class OrdersService {
@@ -21,10 +18,15 @@ public class OrdersService {
     @Autowired
     OrdersRepository ordersRepository;
 
+    @Autowired
+    ParkingBlockService parkingBlockService;
 
-    public Orders save(Orders orders, Long parkingBoyid) throws NotFoundException {
+    public Orders saveOrderAndUpdateParkingBlockStatus(Orders orders, Long parkingBoyid) throws NotFoundException {
         orders.setTimeIn(getCurrentDateTime());
+        orders.setStatus("OPEN");
         orders.setCreatedBy(parkingBoyid);
+
+        parkingBlockService.updateParkingBlockStatus(orders);
         return ordersRepository.save(orders);
     }
 
