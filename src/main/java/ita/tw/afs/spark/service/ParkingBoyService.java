@@ -1,15 +1,10 @@
 package ita.tw.afs.spark.service;
 
-import antlr.ASTNULLType;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
-import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingBoy;
-import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingBoyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ParkingBoyService {
