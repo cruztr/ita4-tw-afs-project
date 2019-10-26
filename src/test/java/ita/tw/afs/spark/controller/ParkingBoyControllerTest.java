@@ -2,6 +2,7 @@ package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
+import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingBoy;
 import ita.tw.afs.spark.service.ParkingBoyService;
 import javassist.NotFoundException;
@@ -16,6 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
 
@@ -41,6 +46,7 @@ class ParkingBoyControllerTest {
     private ObjectMapper objectMapper;
 
     private ParkingBoy parkingBoy;
+
     @BeforeEach
     public void setUp(){
         parkingBoy = new ParkingBoy();
