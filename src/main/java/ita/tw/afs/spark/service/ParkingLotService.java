@@ -26,11 +26,11 @@ public class ParkingLotService {
     private ParkingBlockRepository parkingBlockRepo;
 
     public ParkingLot saveLotAndCreateBlocks(ParkingLot parkingLot) {
-        List<ParkingBlock> parkingBlockList = createParkingBlockList(parkingLot);
-        parkingLot.setParkingBlocks(parkingBlockList);
-
         parkingLotRepo.save(parkingLot);
-        parkingBlockRepo.saveAll(parkingBlockList);
+        List<ParkingBlock> parkingBlockList = createParkingBlockList(parkingLot);
+
+        parkingLot.setParkingBlocks(parkingBlockList);
+        parkingLotRepo.save(parkingLot);
 
         return parkingLot;
     }
@@ -45,13 +45,13 @@ public class ParkingLotService {
             ParkingBlock parkingBlock = new ParkingBlock();
             parkingBlock.setPosition(ctr);
             parkingBlock.setStatus(AVAILABLE);
-            parkingBlock.setParkingLot(parkingLot);
-
+            parkingBlock.setParkingLotId(parkingLot.getId());
             parkingBlockList.add(parkingBlock);
         }
+        parkingBlockRepo.saveAll(parkingBlockList);
         return parkingBlockList;
-    }
 
+    }
     public Optional<ParkingLot> getParkingLot(Long id) {
         return parkingLotRepo.findById(id);
     }

@@ -42,7 +42,7 @@ class ParkingBlockServiceTest {
         parkingBlock = new ParkingBlock();
         parkingBlock.setId(1L);
         parkingBlock.setStatus("OPEN");
-        parkingBlock.setParkingLot(new ParkingLot());
+        parkingBlock.setParkingLotId(1L);
         parkingBlock.setPosition(15);
     }
 
