@@ -71,7 +71,7 @@ class ParkingBlockServiceTest {
         order.setParkingLotId(123L);
 
         when(parkingLotRepository.findById(123L)).thenReturn(Optional.of(parkingLot));
-        when(parkingBlockRepository.findByParkingLotAndParkingBlockPosition(parkingLot, 5)).thenReturn(parkingBlock);
+        when(parkingBlockRepository.findByParkingLotIdAndPosition(parkingLot.getId(), 5)).thenReturn(parkingBlock);
         when(parkingBlockRepository.save(parkingBlock)).thenReturn(parkingBlock);
 
         assertSame(parkingBlockService.updateParkingBlockStatus(order), parkingBlock);
