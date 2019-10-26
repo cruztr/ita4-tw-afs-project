@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(OrdersController.class)
-@ActiveProfiles(profiles = "test")
+@ActiveProfiles(profiles = "OrdersControllerTest")
 class OrdersControllerTest {
 
     @MockBean
@@ -51,7 +51,7 @@ class OrdersControllerTest {
 
     @Test
     void should_add_orders() throws Exception {
-        when(ordersService.save(any(), anyLong())).thenReturn(createDummyOrder());
+        when(ordersService.saveOrderAndUpdateParkingBlockStatus(any(), anyLong())).thenReturn(createDummyOrder());
 
         ResultActions result = mvc.perform(post("/spark/parkingBoy/1/orders")
                 .contentType(MediaType.APPLICATION_JSON)

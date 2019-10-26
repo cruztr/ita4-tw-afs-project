@@ -22,7 +22,7 @@ public class OrdersController {
     @PostMapping(value = "/parkingBoy/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Orders addOrder(@RequestBody Orders orders, @PathVariable Long parkingBoyId) throws NotFoundException {
-        return ordersService.save(orders, parkingBoyId);
+        return ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
     }
 
     @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders", produces = APPLICATION_JSON_VALUE)
@@ -34,9 +34,10 @@ public class OrdersController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> getOrder(@PathVariable Long parkingBoyid,@PathVariable Long orderId) throws NotFoundException {
-        return ordersService.getOrderByIdAndParkingNumber(parkingBoyid,orderId);
+    public Optional<Orders> getOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
+        return ordersService.getOrderByIdAndParkingNumber(parkingBoyId,orderId);
     }
+
 
 
 }

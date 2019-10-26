@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(OrdersService.class)
-@ActiveProfiles(profiles = "test")
+@ActiveProfiles(profiles = "OrdersServiceTest")
 class OrdersServiceTest {
 
     @Autowired
@@ -29,6 +29,12 @@ class OrdersServiceTest {
 
     @MockBean
     OrdersRepository ordersRepository;
+
+    @MockBean
+    ParkingBlockService parkingBlockService;
+
+    @MockBean
+    ParkingLotService parkingLotService;
 
     private Orders orders;
 
@@ -40,16 +46,17 @@ class OrdersServiceTest {
         orders = new Orders();
         orders.setPlateNumber("DXT-312");
         orders.setTimeIn(myDateObj.format(myFormatObj));
-        orders.setTimeOut(null);
-        orders.setCreatedBy(1L);
-        orders.setClosedBy(null);
+        orders.setStatus("OPEN");
+        orders.setParkingBlockPosition(1);
     }
 
     @Test
     void should_add_orders() throws Exception {
         when(ordersRepository.save(orders)).thenReturn(orders);
-        Orders isSavedOrder = ordersService.save(orders, anyLong());
+        Orders isSavedOrder = ordersService.saveOrderAndUpdateParkingBlockStatus(orders, anyLong());
         assertEquals(isSavedOrder, orders);
     }
 
+    //case create order success
+    //check parkingBlock.status == "jkasfhd" using parkingLotId in order
 }

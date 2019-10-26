@@ -35,7 +35,7 @@ class ParkingBlockControllerTest {
 
     @Test
     void should_return_status_ok_when_get_all_parking_blocks() throws Exception {
-        when(parkingBlockService.getAll()).thenReturn(singletonList(new ParkingBlock()));
+        when(parkingBlockService.getAll()).thenReturn(singletonList(new ParkingBlock(1L, 1, new ParkingLot())));
 
         ResultActions resultActions = mockMvc.perform(get("/parkingBlock"));
         resultActions.andExpect(status().isOk());
