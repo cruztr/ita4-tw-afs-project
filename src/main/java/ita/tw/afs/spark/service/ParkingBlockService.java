@@ -39,7 +39,7 @@ public class ParkingBlockService {
         if(parkingLotOptional==null || !parkingLotOptional.isPresent())
             throw new NotFoundException(PARKING_LOT_NOT_FOUND);
 
-        parkingBlock = parkingBlockRepository.findByParkingLotAndParkingBlockPosition(parkingLotOptional.get(), order.getParkingBlockPosition());
+        parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotOptional.get().getId(), order.getParkingBlockPosition());
         parkingBlock.setStatus(OCCUPIED);
         return parkingBlockRepository.save(parkingBlock);
     }
