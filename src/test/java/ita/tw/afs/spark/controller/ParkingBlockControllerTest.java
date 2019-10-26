@@ -55,9 +55,9 @@ class ParkingBlockControllerTest {
 
     @Test
     void should_raise_notFoundException_when_parkingLot_is_not_found() throws Exception {
-        when(parkingBlockService.getParkingBlock(1L)).thenReturn(Optional.of(new ParkingBlock()));
+        when(parkingBlockService.getParkingBlock(1L)).thenReturn(Optional.of(new ParkingBlock(1L, 1, new ParkingLot())));
 
-        ResultActions resultActions = mockMvc.perform(get("/parkingLot/{id}", "2"));
+        ResultActions resultActions = mockMvc.perform(get("/parkingBlock/{id}", 2L));
 
         resultActions.andExpect(status().isNotFound());
     }
