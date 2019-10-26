@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
 
@@ -53,7 +55,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_parking_boy_account_when_correct_username_password() throws Exception {
         when(parkingBoyService.login("username", "password")).thenReturn(parkingBoy);
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -65,7 +67,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_error_object_when_incorrect_username_password() throws Exception {
         doThrow(InvalidCredentialsException.class).when(parkingBoyService).login("username", "password");
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
