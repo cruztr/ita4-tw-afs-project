@@ -56,7 +56,4 @@ class OrdersServiceTest {
         Orders isSavedOrder = ordersService.saveOrderAndUpdateParkingBlockStatus(orders, anyLong());
         assertEquals(isSavedOrder, orders);
     }
-
-    //case create order success
-    //check parkingBlock.status == "jkasfhd" using parkingLotId in order
 }

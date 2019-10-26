@@ -2,6 +2,7 @@ package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ita.tw.afs.spark.model.Orders;
+import ita.tw.afs.spark.repository.OrdersRepository;
 import ita.tw.afs.spark.service.OrdersService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -33,21 +35,11 @@ class OrdersControllerTest {
     @MockBean
     OrdersService ordersService;
 
+    @MockBean
+    OrdersRepository ordersRepository;
+
     @Autowired
     MockMvc mvc;
-
-    public Orders createDummyOrder() {
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-        Orders orders = new Orders();
-        orders.setPlateNumber("DXT-312");
-        orders.setTimeIn(myDateObj.format(myFormatObj));
-        orders.setTimeOut(null);
-        orders.setCreatedBy(1L);
-        orders.setClosedBy(null);
-        return orders;
-    }
 
     @Test
     void should_add_orders() throws Exception {
@@ -71,5 +63,30 @@ class OrdersControllerTest {
         result.andExpect(status().isOk());
     }
 
+    @Test
+    void should_get_order_by_order_id() throws Exception {
+        Long createdBy = 1234L;
+        Long orderId = 1L;
+        Optional<Orders> dummyOrderOptional = Optional.of(createDummyOrder());
+        when(ordersService.getOrderByIdAndParkingNumber(createdBy, orderId)).thenReturn(dummyOrderOptional);
 
+        ResultActions result = mvc.perform(get("/spark/parkingBoy/{parkingBoyId}/orders/{orderId}", createdBy, orderId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dummyOrderOptional.get())));
+
+        result.andExpect(status().isOk());
+    }
+
+    public Orders createDummyOrder() {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+        Orders orders = new Orders();
+        orders.setPlateNumber("DXT-312");
+        orders.setTimeIn(myDateObj.format(myFormatObj));
+        orders.setTimeOut(null);
+        orders.setCreatedBy(1L);
+        orders.setClosedBy(null);
+        return orders;
+    }
 }

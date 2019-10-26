@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -39,11 +39,36 @@ class ParkingLotServiceTest {
     ParkingLotService parkingLotService;
 
     private ParkingLot parkingLot;
+    private List<ParkingLot> parkingLotList;
 
     @BeforeEach
     void setUp() {
+        parkingLotList = new ArrayList<>();
         parkingLot = new ParkingLot(1L, "ParkingLot1", 3);
         parkingLot.setParkingBlocks(buildParkingBlocks("AVAILABLE"));
+        parkingLotList.add(parkingLot);
+    }
+
+    @Test
+    void should_save_lot_and_create_blocks(){
+        when(parkingLotRepository.save(any())).thenReturn(parkingLot);
+
+        assertSame(parkingLotService.saveLotAndCreateBlocks(parkingLot), parkingLot);
+    }
+
+    @Test
+    void should_get_all_parking_lots(){
+        when(parkingLotRepository.findAll()).thenReturn(parkingLotList);
+
+        assertEquals(parkingLotService.getAll(), parkingLotList);
+    }
+
+    @Test
+    void should_get_parking_lot_by_id(){
+        Optional<ParkingLot> parkingLotOptional = Optional.of(parkingLot);
+        when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
+
+        assertEquals(parkingLotService.getParkingLot(1L).get(), parkingLotOptional.get());
     }
 
     @Test

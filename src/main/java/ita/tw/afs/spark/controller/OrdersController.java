@@ -33,7 +33,7 @@ public class OrdersController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/parkingBoy/{parkingBoyId}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
     public Optional<Orders> getOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
         return ordersService.getOrderByIdAndParkingNumber(parkingBoyId,orderId);
     }
