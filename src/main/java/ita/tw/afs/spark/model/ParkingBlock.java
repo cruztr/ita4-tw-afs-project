@@ -11,12 +11,14 @@ public class ParkingBlock {
     private Long id;
     private Integer position;
     private String status;
+    private Long parkingLotId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ParkingLot parkingLot;
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
 
-    public ParkingLot getParkingLot() {
-        return parkingLot;
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
     }
 
     public ParkingBlock() {
@@ -26,12 +28,8 @@ public class ParkingBlock {
         this.id = id;
         this.position = position;
         this.status = AVAILABLE;
-        this.parkingLot = parkingLot;
     }
 
-    public void setParkingLot(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
-    }
 
     public Long getId() {
         return id;
@@ -56,4 +54,5 @@ public class ParkingBlock {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
