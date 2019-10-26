@@ -2,7 +2,6 @@ package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
-import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingBoy;
 import ita.tw.afs.spark.service.ParkingBoyService;
 import javassist.NotFoundException;
@@ -18,9 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
 
@@ -59,7 +56,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_parking_boy_account_when_correct_username_password() throws Exception {
         when(parkingBoyService.login("username", "password")).thenReturn(parkingBoy);
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -71,7 +68,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_error_object_when_incorrect_username_password() throws Exception {
         doThrow(InvalidCredentialsException.class).when(parkingBoyService).login("username", "password");
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
