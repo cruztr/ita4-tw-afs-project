@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(OrdersController.class)
-@ActiveProfiles(profiles = "test")
+@ActiveProfiles(profiles = "OrdersControllerTest")
 class OrdersControllerTest {
 
     @MockBean

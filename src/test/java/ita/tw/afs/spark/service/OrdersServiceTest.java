@@ -33,6 +33,9 @@ class OrdersServiceTest {
     @MockBean
     ParkingBlockService parkingBlockService;
 
+    @MockBean
+    ParkingLotService parkingLotService;
+
     private Orders orders;
 
     @BeforeEach

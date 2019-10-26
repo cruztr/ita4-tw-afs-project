@@ -22,7 +22,7 @@ public class OrdersController {
     @PostMapping(value = "/parkingBoy/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Orders addOrder(@RequestBody Orders orders, @PathVariable Long parkingBoyId) throws NotFoundException {
-        return ordersService.saveOrderAndUpdateParkingBlockStatus(orders, parkingBoyId);
+        return ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
     }
 
     @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders", produces = APPLICATION_JSON_VALUE)
