@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingBoy;
@@ -36,7 +37,7 @@ public class ParkingBoyController {
 
     @GetMapping(value = "/reservations", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.OK)
-    public List<Reservation> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return parkingBoyService.getReservations();
     }
 }

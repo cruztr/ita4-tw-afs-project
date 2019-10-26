@@ -14,7 +14,7 @@ public class CarOwner {
     private String firstName;
     private String lastName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "carOwner")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "carOwner")
     private List<Reservation> reservation;
 
     public Long getId() {

@@ -1,19 +1,12 @@
-package ita.tw.afs.spark.model;
+package ita.tw.afs.spark.dto;
 
-import javax.persistence.*;
-
-@Entity
-public class Reservation {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ReservationResponse {
     private Long reservationNumber;
     private String status;
     private String applicationTime;
     private String reservedTime;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private CarOwner carOwner;
+    private String fullName;
+    private String plateNumber;
 
     public Long getReservationNumber() {
         return reservationNumber;
@@ -47,11 +40,19 @@ public class Reservation {
         this.reservedTime = reservedTime;
     }
 
-    public CarOwner getCarOwner() {
-        return carOwner;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setCarOwner(CarOwner carOwner) {
-        this.carOwner = carOwner;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
     }
 }

@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.ParkingBoy;
 import ita.tw.afs.spark.model.Reservation;
@@ -77,11 +78,11 @@ class ParkingBoyControllerTest {
 
     @Test
     void should_return_ok_when_get_all_reservations() throws Exception {
-        List<Reservation> reservations = new ArrayList<>();
+        List<ReservationResponse> reservationResponses = new ArrayList<>();
 
-        when(parkingBoyService.getReservations()).thenReturn(reservations);
+        when(parkingBoyService.getReservations()).thenReturn(reservationResponses);
         ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/reservations")
-                .content(asJsonString(reservations))
+                .content(asJsonString(reservationResponses))
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
