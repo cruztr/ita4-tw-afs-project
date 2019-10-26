@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 public class Reservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reservationNumber;

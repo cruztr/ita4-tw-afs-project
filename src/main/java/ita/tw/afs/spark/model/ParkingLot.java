@@ -1,7 +1,6 @@
 package ita.tw.afs.spark.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +16,10 @@ public class ParkingLot {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parkingLot")
     private List<ParkingBlock> parkingBlocks;
+
+    public List<ParkingBlock> getParkingBlocks() {
+        return parkingBlocks;
+    }
 
     public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
         this.parkingBlocks = parkingBlocks;

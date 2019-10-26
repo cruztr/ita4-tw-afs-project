@@ -14,7 +14,6 @@ public class CarOwner {
     private String firstName;
     private String lastName;
 
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "carOwner")
     private List<Reservation> reservation;
 

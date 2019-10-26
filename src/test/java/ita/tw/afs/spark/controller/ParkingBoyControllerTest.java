@@ -1,11 +1,9 @@
 package ita.tw.afs.spark.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
-import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingBoy;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.ParkingBoyService;
-import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,20 +19,21 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static ita.tw.afs.spark.testUtil.TestUtil.asJsonString;
 import static org.hamcrest.Matchers.is;
-
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({ParkingBoyController.class})
 @ActiveProfiles(profiles = "test")
 class ParkingBoyControllerTest {
+
     @Autowired
-    ParkingBoyController parkingBoyController;
+    private ParkingBoyController parkingBoyController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,10 +41,8 @@ class ParkingBoyControllerTest {
     @MockBean
     private ParkingBoyService parkingBoyService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private ParkingBoy parkingBoy;
+
 
     @BeforeEach
     public void setUp(){
@@ -59,7 +56,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_parking_boy_account_when_correct_username_password() throws Exception {
         when(parkingBoyService.login("username", "password")).thenReturn(parkingBoy);
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -71,18 +68,24 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_error_object_when_incorrect_username_password() throws Exception {
         doThrow(InvalidCredentialsException.class).when(parkingBoyService).login("username", "password");
-        ResultActions resultActions = mockMvc.perform(get("/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isNotFound());
     }
 
-    private String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    void should_return_ok_when_get_all_reservations() throws Exception {
+        List<Reservation> reservations = new ArrayList<>();
+
+        when(parkingBoyService.getReservations()).thenReturn(reservations);
+        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/reservations")
+                .content(asJsonString(reservations))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk());
     }
+
+
 }
