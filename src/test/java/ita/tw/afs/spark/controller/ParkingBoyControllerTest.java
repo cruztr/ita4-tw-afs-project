@@ -3,7 +3,6 @@ package ita.tw.afs.spark.controller;
 import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.ParkingBoy;
-import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.ParkingBoyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +57,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_parking_boy_account_when_correct_username_password() throws Exception {
         when(parkingBoyService.login("username", "password")).thenReturn(parkingBoy);
-        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/spark/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -69,7 +69,7 @@ class ParkingBoyControllerTest {
     @Test
     public void should_return_error_object_when_incorrect_username_password() throws Exception {
         doThrow(InvalidCredentialsException.class).when(parkingBoyService).login("username", "password");
-        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/spark/parkingBoy/login")
                 .content(asJsonString(parkingBoy))
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -81,7 +81,7 @@ class ParkingBoyControllerTest {
         List<ReservationResponse> reservationResponses = new ArrayList<>();
 
         when(parkingBoyService.getReservations()).thenReturn(reservationResponses);
-        ResultActions resultActions = mockMvc.perform(get("/sparks/parkingBoy/reservations")
+        ResultActions resultActions = mockMvc.perform(get("/spark/parkingBoy/reservations")
                 .content(asJsonString(reservationResponses))
                 .contentType(MediaType.APPLICATION_JSON));
 

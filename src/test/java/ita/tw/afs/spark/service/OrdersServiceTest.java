@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(OrdersService.class)
-@ActiveProfiles(profiles = "test")
+@ActiveProfiles(profiles = "OrdersServiceTest")
 class OrdersServiceTest {
 
     @Autowired
@@ -30,6 +29,12 @@ class OrdersServiceTest {
 
     @MockBean
     OrdersRepository ordersRepository;
+
+    @MockBean
+    ParkingBlockService parkingBlockService;
+
+    @MockBean
+    ParkingLotService parkingLotService;
 
     private Orders orders;
 
@@ -41,16 +46,14 @@ class OrdersServiceTest {
         orders = new Orders();
         orders.setPlateNumber("DXT-312");
         orders.setTimeIn(myDateObj.format(myFormatObj));
-        orders.setTimeOut(null);
-        orders.setCreatedBy(1L);
-        orders.setClosedBy(null);
+        orders.setStatus("OPEN");
+        orders.setParkingBlockPosition(1);
     }
 
     @Test
     void should_add_orders() throws Exception {
         when(ordersRepository.save(orders)).thenReturn(orders);
-        Orders isSavedOrder = ordersService.save(orders, anyLong());
+        Orders isSavedOrder = ordersService.saveOrderAndUpdateParkingBlockStatus(orders, anyLong());
         assertEquals(isSavedOrder, orders);
     }
-
 }
