@@ -87,4 +87,6 @@ public class ParkingLotService {
 
         throw new NotFoundException(PARKING_BLOCK_NOT_FOUND);
     }
+
+
 }
