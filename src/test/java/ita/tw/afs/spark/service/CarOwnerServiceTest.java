@@ -1,10 +1,10 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
-import javassist.NotFoundException;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -60,6 +59,26 @@ class CarOwnerServiceTest {
          when(carOwnerRepository.findByUsernameAndPassword("mikeCrophones07", "Amikewashicho"))
                  .thenReturn(null);
 
-        assertThrows(InvalidCredentialsException.class, () -> carOwnerService.login(carOwner.getUsername(), carOwner.getPassword()));
+        assertThrows(InvalidCredentialsException.class,
+                () -> carOwnerService.login(carOwner.getUsername(), carOwner.getPassword()));
+    }
+
+    @Test
+    void should_return_ok_when_credential_for_sign_up_is_correct() throws ExistingCredentialException {
+        when(carOwnerRepository.findByUsernameOrPassword("mikeCrophones07", "Amikewashicho"))
+                .thenReturn(null);
+        when(carOwnerRepository.save(carOwner)).thenReturn(carOwner);
+
+        CarOwner actualCarOwner = carOwnerService.signUp(carOwner);
+        Assert.assertThat(actualCarOwner, is(carOwner));
+    }
+
+    @Test
+    void should_return_error_when_credential_for_sign_up_is_existing() throws ExistingCredentialException {
+        when(carOwnerRepository.findByUsernameOrPassword("mikeCrophones07", "Amikewashicho"))
+                .thenReturn(carOwner);
+
+        assertThrows(ExistingCredentialException.class,
+                () -> carOwnerService.signUp(carOwner));
     }
 }

@@ -1,6 +1,7 @@
 package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
 import static ita.tw.afs.spark.testUtil.TestUtil.asJsonString;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -94,5 +96,16 @@ public class CarOwnerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_return_error_when_carOwner_sign_up_account_credential_is_existing() throws Exception {
+        when(carOwnerService.signUp(anyObject())).thenThrow(new ExistingCredentialException("Invalid"));
+
+        ResultActions resultActions = mockMvc.perform(post("/spark/carOwner/signUp")
+                .content(asJsonString(carOwner))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isNotFound());
     }
 }

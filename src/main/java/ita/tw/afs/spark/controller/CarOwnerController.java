@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
@@ -28,7 +29,8 @@ public class CarOwnerController {
     }
 
     @PostMapping(value = "/signUp", produces = {"application/json"})
-    public CarOwner signUp(@RequestBody CarOwner carOwner) {
-        return carOwnerService.signUp(carOwner);
+    public CarOwner signUp(@RequestBody CarOwner carOwner) throws ExistingCredentialException {
+        CarOwner finalCarOwner = carOwnerService.signUp(carOwner);
+        return finalCarOwner;
     }
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface CarOwnerRepository extends JpaRepository<CarOwner, Long> {
 
     CarOwner findByUsernameAndPassword(String username, String password);
+
+    CarOwner findByUsernameOrPassword(String username, String password);
 }
