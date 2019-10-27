@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class CarOwnerService {
 
+    public static final String RESERVED = "RESERVED";
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -23,22 +24,9 @@ public class CarOwnerService {
 
     public Reservation createReservation(Reservation reservation) {
         Date date = new Date();
-        CarOwner carOwner = new CarOwner();
-        carOwner.setFirstName("Genrev");
-        carOwner.setLastName("Arambulo");
-        carOwner.setPlateNumber("PAX-1726");
+        reservation.setStatus(RESERVED);
+        reservation.setApplicationTime(date.toString());
 
-        for(int ctr = 0; ctr<10; ctr++){
-            Reservation reservation1 = new Reservation();
-            reservation1.setApplicationTime(reservation.getApplicationTime());
-            reservation1.setReservedTime(reservation.getReservedTime());
-            reservation1.setStatus(reservation.getStatus());
-            reservation1.setApplicationTime(date.toString());
-            reservation1.setCarOwner(carOwner);
-            reservationRepository.save(reservation1);
-
-        }
-        carOwnerRepository.save(carOwner);
-        return reservation;
+        return reservationRepository.save(reservation);
     }
 }

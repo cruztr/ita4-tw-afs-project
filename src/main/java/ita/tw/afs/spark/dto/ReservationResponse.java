@@ -2,6 +2,7 @@ package ita.tw.afs.spark.dto;
 
 public class ReservationResponse {
     private Long reservationNumber;
+    private Long key;
     private String status;
     private String applicationTime;
     private String reservedTime;
@@ -14,6 +15,14 @@ public class ReservationResponse {
 
     public void setReservationNumber(Long reservationNumber) {
         this.reservationNumber = reservationNumber;
+    }
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
     }
 
     public String getStatus() {

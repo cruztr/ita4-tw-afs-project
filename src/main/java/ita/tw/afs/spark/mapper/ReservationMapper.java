@@ -22,6 +22,7 @@ public class ReservationMapper {
         reservationResponse.setApplicationTime(reservation.getApplicationTime());
         reservationResponse.setStatus(reservation.getStatus());
         reservationResponse.setReservationNumber(reservation.getReservationNumber());
+        reservationResponse.setKey(reservation.getReservationNumber());
         return reservationResponse;
     }
 }
