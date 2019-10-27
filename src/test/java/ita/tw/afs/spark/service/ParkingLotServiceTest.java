@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.transaction.NotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,15 +46,47 @@ class ParkingLotServiceTest {
     void setUp() {
         parkingLotList = new ArrayList<>();
         parkingLot = new ParkingLot(1L, "ParkingLot1", 3);
-        parkingLot.setParkingBlocks(buildParkingBlocks("AVAILABLE"));
+        //parkingLot.setParkingBlocks(buildParkingBlocks("AVAILABLE"));
+        parkingLot.setRate(10.00);
+        parkingLot.setLocation("Mnl");
         parkingLotList.add(parkingLot);
     }
 
     @Test
-    void should_save_lot_and_create_blocks(){
+    void should_save_lot_and_create_blocks() throws NotSupportedException, NotFoundException {
         when(parkingLotRepository.save(any())).thenReturn(parkingLot);
 
         assertSame(parkingLotService.saveLotAndCreateBlocks(parkingLot), parkingLot);
+    }
+
+    @Test
+    void should_not_save_parking_lot_when_some_fields_are_empty() throws NotSupportedException {
+        parkingLot.setLocation("");
+        when(parkingLotRepository.save(any())).thenReturn(parkingLot);
+
+        assertThrows(NotSupportedException.class, () -> {
+            parkingLotService.saveLotAndCreateBlocks(parkingLot);
+        });
+    }
+
+    @Test
+    void should_not_save_parking_lot_when_capacity_is_invalid() throws NotSupportedException {
+        parkingLot.setCapacity(-1);
+        when(parkingLotRepository.save(any())).thenReturn(parkingLot);
+
+        assertThrows(NotSupportedException.class, () -> {
+            parkingLotService.saveLotAndCreateBlocks(parkingLot);
+        });
+    }
+
+    @Test
+    void should_not_save_parking_lot_when_rate_is_invalid() throws NotSupportedException {
+        parkingLot.setRate(-1.00);
+        when(parkingLotRepository.save(any())).thenReturn(parkingLot);
+
+        assertThrows(NotSupportedException.class, () -> {
+            parkingLotService.saveLotAndCreateBlocks(parkingLot);
+        });
     }
 
     @Test
@@ -64,7 +97,7 @@ class ParkingLotServiceTest {
     }
 
     @Test
-    void should_get_parking_lot_by_id(){
+    void should_get_parking_lot_by_id() throws NotFoundException {
         Optional<ParkingLot> parkingLotOptional = Optional.of(parkingLot);
         when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
 
@@ -72,36 +105,46 @@ class ParkingLotServiceTest {
     }
 
     @Test
-    void should_get_available_parking_blocks() throws NotFoundException {
+    void should_not_get_parking_lot_when_id_doesnt_exist() throws NotFoundException {
+        Optional<ParkingLot> parkingLotOptional = Optional.of(parkingLot);
         when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
 
-        assertEquals(parkingLotService.getAvailableParkingBlocks(1L).size(), parkingLot.getCapacity().intValue());
-    }
-
-    @Test
-    void should_throw_not_exception_when_parking_lot_id_is_invalid() {
-        when(parkingLotRepository.findById(1L)).thenReturn(null);
-
         assertThrows(NotFoundException.class, () -> {
-            parkingLotService.getAvailableParkingBlocks(2L);
+            parkingLotService.getParkingLot(2L);
         });
     }
 
-    @Test
-    void should_return_emptyList_when_no_available_parkingBlocks() throws NotFoundException {
-        parkingLot.setParkingBlocks(buildParkingBlocks("OCCUPIED"));
-        when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
-
-        assertEquals(parkingLotService.getAvailableParkingBlocks(1L), emptyList());
-    }
-
-    private List<ParkingBlock> buildParkingBlocks(String status) {
-        List<ParkingBlock> parkingBlockList = new ArrayList<>();
-        for(int i=1; i<parkingLot.getCapacity()+1; i++)
-            parkingBlockList.add(buildParkingBlock(i, status));
-
-        return parkingBlockList;
-    }
+//    @Test
+//    void should_get_available_parking_blocks() throws NotFoundException {
+//        when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
+//
+//        assertEquals(parkingLotService.getAvailableParkingBlocks(1L).size(), parkingLot.getCapacity().intValue());
+//    }
+//
+//    @Test
+//    void should_throw_not_exception_when_parking_lot_id_is_invalid() {
+//        when(parkingLotRepository.findById(1L)).thenReturn(null);
+//
+//        assertThrows(NotFoundException.class, () -> {
+//            parkingLotService.getAvailableParkingBlocks(2L);
+//        });
+//    }
+//
+//    @Test
+//    void should_return_emptyList_when_no_available_parkingBlocks() throws NotFoundException {
+//        parkingLot.setParkingBlocks(buildParkingBlocks("OCCUPIED"));
+//        when(parkingLotRepository.findById(1L)).thenReturn(Optional.of(parkingLot));
+//
+//        assertEquals(parkingLotService.getAvailableParkingBlocks(1L), emptyList());
+//    }
+//
+//    private List<ParkingBlock> buildParkingBlocks(String status) {
+//        List<ParkingBlock> parkingBlockList = new ArrayList<>();
+//        for(int i=1; i<parkingLot.getCapacity()+1; i++)
+//            parkingBlockList.add(buildParkingBlock(i, status));
+//
+//        return parkingBlockList;
+//    }
 
     private ParkingBlock buildParkingBlock(int position, String status) {
         ParkingBlock parkingBlock = new ParkingBlock();

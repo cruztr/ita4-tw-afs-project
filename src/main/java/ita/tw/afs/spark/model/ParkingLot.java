@@ -16,8 +16,8 @@ public class ParkingLot {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ParkingBlock> parkingBlocks;
 
-    public List<ParkingBlock> getParkingBlocks() {
-        return parkingBlocks;
+    private Double rate;
+
     }
 
     public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
@@ -27,7 +27,7 @@ public class ParkingLot {
     public ParkingLot() {
     }
 
-    public ParkingLot(Long id, String name, Integer capacity) {
+    public ParkingLot(Long id, String name, Integer capacity) calc(1px + 1.5vmin);{
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -64,4 +64,12 @@ public class ParkingLot {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
 }

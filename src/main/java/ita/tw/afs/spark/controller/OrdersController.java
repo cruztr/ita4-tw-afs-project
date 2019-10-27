@@ -7,36 +7,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.NotSupportedException;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/spark")
+@RequestMapping("/spark/parkingBoy")
 public class OrdersController {
 
     @Autowired
     OrdersService ordersService;
 
-    @PostMapping(value = "/parkingBoy/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Orders addOrder(@RequestBody Orders orders, @PathVariable Long parkingBoyId) throws NotFoundException {
+    public Orders addOrder(@RequestBody Orders orders, @PathVariable Long parkingBoyId) throws NotFoundException, NotSupportedException {
         return ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
     }
 
-    @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/orders", produces = APPLICATION_JSON_VALUE)
     public Iterable<Orders> listOrders(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                  @RequestParam(required = false, defaultValue = "10") Integer size,
-                                       @PathVariable Long parkingBoyid) {
-        return ordersService.getOrdersByPage(parkingBoyid);
+                                  @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ordersService.getOrdersByPage();
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/parkingBoy/{parkingBoyId}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> getOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
-        return ordersService.getOrderByIdAndParkingNumber(parkingBoyId,orderId);
+    @GetMapping(value = "/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
+    public Optional<Orders> getOrder(@PathVariable Long orderId) throws NotFoundException {
+        return ordersService.getOrderById(orderId);
     }
 
-
-
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(value = "/{parkingBoyId}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
+    public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
+        return ordersService.closeOrderById(parkingBoyId, orderId);
+    }
 }

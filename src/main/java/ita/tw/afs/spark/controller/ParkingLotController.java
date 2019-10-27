@@ -22,7 +22,7 @@ public class ParkingLotController {
 
     @PostMapping(produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ParkingLot createParkingLot(@RequestBody ParkingLot parkingLot) {
+    public ParkingLot createParkingLot(@RequestBody ParkingLot parkingLot) throws NotFoundException {
         return parkingLotService.saveLotAndCreateBlocks(parkingLot);
     }
 
