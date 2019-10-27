@@ -1,8 +1,10 @@
 package ita.tw.afs.spark.model;
 
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Orders {
@@ -10,12 +12,11 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<ParkingLot> parkingLot;
-
-    @Column(unique = true)
+    private Long parkingLotId;
+    private Integer parkingBlockPosition;
+    private Long reservationNumber;
     private String plateNumber;
-
+    private String status;
     private String timeIn;
     private String timeOut;
     private Long createdBy;
@@ -32,12 +33,20 @@ public class Orders {
         this.orderId = orderId;
     }
 
-    public List<ParkingLot> getParkingLot() {
-        return parkingLot;
+    public Long getParkingLotId() {
+        return parkingLotId;
     }
 
-    public void setParkingLot(List<ParkingLot> parkingLot) {
-        this.parkingLot = parkingLot;
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+    public Integer getParkingBlockPosition() {
+        return parkingBlockPosition;
+    }
+
+    public void setParkingBlockPosition(Integer parkingBlockPosition) {
+        this.parkingBlockPosition = parkingBlockPosition;
     }
 
     public String getPlateNumber() {
@@ -46,6 +55,22 @@ public class Orders {
 
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getReservationNumber() {
+        return reservationNumber;
+    }
+
+    public void setReservationNumber(Long reservationNumber) {
+        this.reservationNumber = reservationNumber;
     }
 
     public String getTimeIn() {

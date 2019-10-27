@@ -1,8 +1,6 @@
 package ita.tw.afs.spark.controller;
 
-import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
-import ita.tw.afs.spark.service.ParkingBlockService;
 import ita.tw.afs.spark.service.ParkingLotService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value ="/parkingLot")
 public class ParkingLotController {
 
