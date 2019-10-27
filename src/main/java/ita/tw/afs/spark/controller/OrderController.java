@@ -14,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/spark/parkingBoy")
-public class OrdersController {
+public class OrderController {
 
     @Autowired
     OrdersService ordersService;
@@ -27,7 +27,7 @@ public class OrdersController {
 
     @GetMapping(value = "/orders", produces = APPLICATION_JSON_VALUE)
     public Iterable<Orders> listOrders(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                  @RequestParam(required = false, defaultValue = "10") Integer size) {
+                                       @RequestParam(required = false, defaultValue = "10") Integer size) {
         return ordersService.getOrdersByPage();
     }
 

@@ -106,8 +106,8 @@ public class OrdersService {
         long checkExceedingMinutes = Math.abs(duration.toMinutes()) % 60;
         long finalComputedHours = renderedHours;
         if(checkExceedingMinutes != 0) {
-            renderedHours++;
-            renderedHours -= BONUS_HOUR;
+            finalComputedHours++;
+            finalComputedHours -= BONUS_HOUR;
         }
         return finalComputedHours * parkingLotRate;
     }

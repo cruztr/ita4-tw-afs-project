@@ -1,34 +1,22 @@
 package ita.tw.afs.spark.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.repository.OrdersRepository;
+import ita.tw.afs.spark.repository.ReservationRepository;
 import ita.tw.afs.spark.service.OrdersService;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(OrdersController.class)
+@WebMvcTest(OrderController.class)
 @ActiveProfiles(profiles = "OrdersControllerTest")
 class OrdersControllerTest {
 
@@ -38,10 +26,14 @@ class OrdersControllerTest {
     @MockBean
     OrdersRepository ordersRepository;
 
+    @MockBean
+    ReservationRepository reservationRepository;
+
     @Autowired
     MockMvc mvc;
 
-//    @Test
+
+    //    @Test
 //    void should_add_orders() throws Exception {
 //        when(ordersService.saveOrderAndUpdateParkingBlockStatus(any(), anyLong(), availableParkingBlocks)).thenReturn(createDummyOrder());
 //
