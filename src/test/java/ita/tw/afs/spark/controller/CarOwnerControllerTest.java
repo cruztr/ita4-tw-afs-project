@@ -39,9 +39,6 @@ public class CarOwnerControllerTest {
     @MockBean
     private CarOwnerService carOwnerService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private CarOwner carOwner;
 
     @BeforeEach
@@ -62,12 +59,12 @@ public class CarOwnerControllerTest {
 
         ResultActions result = mockMvc.perform(post("/spark/carOwner")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reservation)));
+                .content(asJsonString(reservation)));
         result.andExpect(status().isCreated());
     }
 
     @Test
-    public void should_return_parking_boy_account_when_correct_username_password() throws Exception {
+    public void should_return_carOwner_account_when_correct_username_password() throws Exception {
         when(carOwnerService.login("mikeCrophones07", "Amikewashicho")).thenReturn(carOwner);
         ResultActions resultActions = mockMvc.perform(post("/spark/carOwner/login")
                 .content(asJsonString(carOwner))
@@ -81,10 +78,21 @@ public class CarOwnerControllerTest {
     @Test
     public void should_return_error_object_when_incorrect_username_password() throws Exception {
         doThrow(InvalidCredentialsException.class).when(carOwnerService).login("mikeCrophones07", "Amikewashicho");
-        ResultActions resultActions = mockMvc.perform(post("/spark/parkingBoy/login")
+        ResultActions resultActions = mockMvc.perform(post("/spark/carOwner/login")
                 .content(asJsonString(carOwner))
                 .contentType(MediaType.APPLICATION_JSON));
 
         resultActions.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void should_return_ok_when_carOwner_sign_up_account() throws Exception {
+        when(carOwnerService.signUp(carOwner)).thenReturn(carOwner);
+
+        ResultActions resultActions = mockMvc.perform(post("/spark/carOwner/signUp")
+                .content(asJsonString(carOwner))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk());
     }
 }

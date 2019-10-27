@@ -26,4 +26,9 @@ public class CarOwnerController {
     public CarOwner login(@RequestBody CarOwner carOwner) throws InvalidCredentialsException {
         return carOwnerService.login(carOwner.getUsername(), carOwner.getPassword());
     }
+
+    @PostMapping(value = "/signUp", produces = {"application/json"})
+    public CarOwner signUp(@RequestBody CarOwner carOwner) {
+        return carOwnerService.signUp(carOwner);
+    }
 }

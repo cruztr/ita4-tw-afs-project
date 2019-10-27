@@ -47,4 +47,8 @@ public class CarOwnerService {
         }
         throw new InvalidCredentialsException("Incorrect username/password.");
     }
+
+    public CarOwner signUp(CarOwner carOwner) {
+        return carOwnerRepository.save(carOwner);
+    }
 }

@@ -18,8 +18,6 @@ public class ParkingLot {
 
     private Double rate;
 
-    }
-
     public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
         this.parkingBlocks = parkingBlocks;
     }
@@ -27,7 +25,7 @@ public class ParkingLot {
     public ParkingLot() {
     }
 
-    public ParkingLot(Long id, String name, Integer capacity) calc(1px + 1.5vmin);{
+    public ParkingLot(Long id, String name, Integer capacity) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -64,7 +62,6 @@ public class ParkingLot {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
-    }
 
     public Double getRate() {
         return rate;
@@ -72,4 +69,5 @@ public class ParkingLot {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
 }
