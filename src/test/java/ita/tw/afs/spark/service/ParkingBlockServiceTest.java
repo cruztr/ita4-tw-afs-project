@@ -74,8 +74,8 @@ class ParkingBlockServiceTest {
         when(parkingBlockRepository.findByParkingLotIdAndPosition(parkingLot.getId(), 5)).thenReturn(parkingBlock);
         when(parkingBlockRepository.save(parkingBlock)).thenReturn(parkingBlock);
 
-        assertSame(parkingBlockService.updateParkingBlockStatus(order), parkingBlock);
-        assertSame(parkingBlockService.updateParkingBlockStatus(order).getStatus(), "OCCUPIED");
+        assertSame(parkingBlockService.updateParkingBlockStatusToOccupied(order), parkingBlock);
+        assertSame(parkingBlockService.updateParkingBlockStatusToOccupied(order).getStatus(), "OCCUPIED");
     }
 
     @Test
@@ -88,7 +88,7 @@ class ParkingBlockServiceTest {
         when(parkingLotRepository.findById(123L)).thenReturn(null);
 
         assertThrows(NotFoundException.class, () -> {
-            parkingBlockService.updateParkingBlockStatus(order);
+            parkingBlockService.updateParkingBlockStatusToOccupied(order);
         });
 
     }

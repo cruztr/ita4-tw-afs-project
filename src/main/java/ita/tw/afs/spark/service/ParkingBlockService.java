@@ -17,6 +17,7 @@ public class ParkingBlockService {
 
     private static final String OCCUPIED = "OCCUPIED";
     private static final String PARKING_LOT_NOT_FOUND = "Parking Lot Not Found";
+    private static final String AVAILABLE = "AVAILABLE";
 
     @Autowired
     private ParkingBlockRepository parkingBlockRepository;
@@ -32,7 +33,7 @@ public class ParkingBlockService {
         return parkingBlockRepository.findById(id);
     }
 
-    public ParkingBlock updateParkingBlockStatus(Orders order) throws NotFoundException {
+    public ParkingBlock updateParkingBlockStatusToOccupied(Orders order) throws NotFoundException {
         ParkingBlock parkingBlock;
         Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findById(order.getParkingLotId());
 
@@ -42,5 +43,11 @@ public class ParkingBlockService {
         parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotOptional.get().getId(), order.getParkingBlockPosition());
         parkingBlock.setStatus(OCCUPIED);
         return parkingBlockRepository.save(parkingBlock);
+    }
+
+    public void updateParkingBlockStatusToAvailable(Long parkingLotId, Integer parkingBlockPosition) {
+        ParkingBlock parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition);
+        parkingBlock.setStatus(AVAILABLE);
+        parkingBlockRepository.save(parkingBlock);
     }
 }
