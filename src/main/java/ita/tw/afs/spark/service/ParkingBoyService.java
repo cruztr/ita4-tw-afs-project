@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 public class ParkingBoyService {
-
     public static final String STATUS = "RESERVED";
 
     @Autowired

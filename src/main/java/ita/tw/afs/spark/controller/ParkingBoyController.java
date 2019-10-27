@@ -32,7 +32,7 @@ public class ParkingBoyController {
         return parkingBoyService.login(parkingBoy.getUsername(), parkingBoy.getPassword());
     }
 
-    @GetMapping(value = "/reservations", produces = {"application/json"})
+    @GetMapping(value = "/parkingBoy/reservations", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.OK)
     public List<ReservationResponse> getReservations() {
         return parkingBoyService.getReservations();

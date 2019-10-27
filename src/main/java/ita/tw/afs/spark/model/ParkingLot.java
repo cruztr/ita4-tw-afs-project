@@ -62,19 +62,14 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
-    public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
-        this.parkingBlocks = parkingBlocks;
-    }
-
-    public List<ParkingBlock> getParkingBlocks() {
-        return parkingBlocks;
-    }
-
     public Double getRate() {
         return rate;
     }
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public void setParkingBlocks(List<ParkingBlock> parkingBlockList) {
     }
 }
