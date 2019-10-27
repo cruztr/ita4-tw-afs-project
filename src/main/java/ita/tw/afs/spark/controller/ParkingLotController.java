@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.NotSupportedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class ParkingLotController {
 
     @PostMapping(produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ParkingLot createParkingLot(@RequestBody ParkingLot parkingLot) {
+    public ParkingLot createParkingLot(@RequestBody ParkingLot parkingLot) throws NotFoundException {
         return parkingLotService.saveLotAndCreateBlocks(parkingLot);
     }
 
