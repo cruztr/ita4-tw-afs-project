@@ -25,16 +25,15 @@ public class OrdersController {
         return ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
     }
 
-    @GetMapping(value = "/parkingBoy/{parkingBoyid}/orders", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/parkingBoy/orders", produces = APPLICATION_JSON_VALUE)
     public Iterable<Orders> listOrders(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                  @RequestParam(required = false, defaultValue = "10") Integer size,
-                                       @PathVariable Long parkingBoyid) {
-        return ordersService.getOrdersByPage(parkingBoyid);
+                                  @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ordersService.getOrdersByPage();
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/parkingBoy/{parkingBoyId}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> getOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
-        return ordersService.getOrderByIdAndParkingNumber(parkingBoyId,orderId);
+    @GetMapping(value = "/parkingBoy/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
+    public Optional<Orders> getOrder(@PathVariable Long orderId) throws NotFoundException {
+        return ordersService.getOrderById(orderId);
     }
 }

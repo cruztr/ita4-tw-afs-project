@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingLotService {
@@ -76,29 +75,16 @@ public class ParkingLotService {
         throw new NotFoundException(PARKING_LOT_NOT_FOUND);
     }
 
-    public ParkingBlock checkIfParkingBlockPositionIsValid(Long parkingLotId, Integer parkingBlockPosition) throws NotFoundException {
+    public Boolean checkIfParkingBlockPositionIsValid(Long parkingLotId, Integer parkingBlockPosition) throws NotFoundException {
         ParkingBlock parkingBlock = parkingBlockRepo.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition);
 
         if(parkingBlock != null) {
             if(parkingBlock.getStatus().equals(AVAILABLE))
-                return parkingBlock;
+                return true;
 
             throw new NotFoundException(PARKING_BLOCK_IS_ALREADY_OCCUPIED);
         }
 
         throw new NotFoundException(PARKING_BLOCK_NOT_FOUND);
     }
-
-//    public List<ParkingBlock> getAvailableParkingBlocks(Long id) throws NotFoundException {
-//        Optional<ParkingLot> parkingLotOptional = parkingLotRepo.findById(id);
-//
-//        if(!parkingLotOptional.isPresent())
-//            throw new NotFoundException(PARKING_LOT_NOT_FOUND);
-//
-//        return parkingLotOptional.get()
-//                .getParkingBlocks()
-//                .stream()
-//                .filter(parkingBlock -> AVAILABLE.equals(parkingBlock.getStatus()))
-//                .collect(Collectors.toList());
-//    }
 }
