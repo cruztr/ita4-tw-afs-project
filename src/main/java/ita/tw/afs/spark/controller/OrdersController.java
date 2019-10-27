@@ -36,7 +36,4 @@ public class OrdersController {
     public Optional<Orders> getOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
         return ordersService.getOrderByIdAndParkingNumber(parkingBoyId,orderId);
     }
-
-
-
 }
