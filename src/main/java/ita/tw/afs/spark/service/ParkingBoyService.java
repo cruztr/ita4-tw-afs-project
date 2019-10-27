@@ -4,17 +4,16 @@ import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.mapper.ReservationMapper;
 import ita.tw.afs.spark.model.ParkingBoy;
-import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.ParkingBoyRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ParkingBoyService {
-    hibernate:
-      ddl-auto: create-drop
     public static final String STATUS = "RESERVED";
 
     @Autowired
