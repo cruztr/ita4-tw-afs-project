@@ -8,7 +8,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.NotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +21,8 @@ public class ParkingLotService {
     private static final String PLEASE_INPUT_ALL_REQUIRED_FIELDS = "PLEASE INPUT ALL REQUIRED FIELDS";
     private static final String INVALID_CAPACITY = "INVALID CAPACITY";
     private static final String PLEASE_INPUT_A_VALID_RATE = "PLEASE INPUT A VALID RATE";
+    private static final String PARKING_BLOCK_NOT_FOUND = "PARKING BLOCK NOT FOUND";
+    private static final String PARKING_BLOCK_IS_ALREADY_OCCUPIED = "PARKING BLOCK IS ALREADY OCCUPIED";
 
     @Autowired
     private ParkingLotRepository parkingLotRepo;
@@ -29,7 +30,7 @@ public class ParkingLotService {
     @Autowired
     private ParkingBlockRepository parkingBlockRepo;
 
-    public ParkingLot saveLotAndCreateBlocks(ParkingLot parkingLot) throws NotSupportedException {
+    public ParkingLot saveLotAndCreateBlocks(ParkingLot parkingLot) throws NotFoundException {
         if(!parkingLot.getName().isEmpty()
             && !parkingLot.getLocation().isEmpty()
             && parkingLot.getCapacity() != null) {
@@ -43,11 +44,11 @@ public class ParkingLotService {
 
                     return parkingLot;
                 }
-                throw new NotSupportedException(PLEASE_INPUT_A_VALID_RATE);
+                throw new NotFoundException(PLEASE_INPUT_A_VALID_RATE);
             }
-            throw new NotSupportedException(INVALID_CAPACITY);
+            throw new NotFoundException(INVALID_CAPACITY);
         }
-        throw new NotSupportedException(PLEASE_INPUT_ALL_REQUIRED_FIELDS);
+        throw new NotFoundException(PLEASE_INPUT_ALL_REQUIRED_FIELDS);
     }
 
     public List<ParkingLot> getAll() {
@@ -58,7 +59,7 @@ public class ParkingLotService {
         List<ParkingBlock> parkingBlockList = new ArrayList<>();
         for(int ctr=0; ctr<parkingLot.getCapacity(); ctr++){
             ParkingBlock parkingBlock = new ParkingBlock();
-            parkingBlock.setPosition(ctr);
+            parkingBlock.setPosition(ctr + 1);
             parkingBlock.setStatus(AVAILABLE);
             parkingBlock.setParkingLotId(parkingLot.getId());
             parkingBlockList.add(parkingBlock);
@@ -75,16 +76,29 @@ public class ParkingLotService {
         throw new NotFoundException(PARKING_LOT_NOT_FOUND);
     }
 
-    public List<ParkingBlock> getAvailableParkingBlocks(Long id) throws NotFoundException {
-        Optional<ParkingLot> parkingLotOptional = parkingLotRepo.findById(id);
+    public ParkingBlock checkIfParkingBlockPositionIsValid(Long parkingLotId, Integer parkingBlockPosition) throws NotFoundException {
+        ParkingBlock parkingBlock = parkingBlockRepo.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition);
 
-        if(!parkingLotOptional.isPresent())
-            throw new NotFoundException(PARKING_LOT_NOT_FOUND);
+        if(parkingBlock != null) {
+            if(parkingBlock.getStatus().equals(AVAILABLE))
+                return parkingBlock;
 
-        return parkingLotOptional.get()
-                .getParkingBlocks()
-                .stream()
-                .filter(parkingBlock -> AVAILABLE.equals(parkingBlock.getStatus()))
-                .collect(Collectors.toList());
+            throw new NotFoundException(PARKING_BLOCK_IS_ALREADY_OCCUPIED);
+        }
+
+        throw new NotFoundException(PARKING_BLOCK_NOT_FOUND);
     }
+
+//    public List<ParkingBlock> getAvailableParkingBlocks(Long id) throws NotFoundException {
+//        Optional<ParkingLot> parkingLotOptional = parkingLotRepo.findById(id);
+//
+//        if(!parkingLotOptional.isPresent())
+//            throw new NotFoundException(PARKING_LOT_NOT_FOUND);
+//
+//        return parkingLotOptional.get()
+//                .getParkingBlocks()
+//                .stream()
+//                .filter(parkingBlock -> AVAILABLE.equals(parkingBlock.getStatus()))
+//                .collect(Collectors.toList());
+//    }
 }
