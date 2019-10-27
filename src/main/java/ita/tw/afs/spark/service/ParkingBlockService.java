@@ -31,13 +31,15 @@ public class ParkingBlockService {
         Optional<ParkingLot> parkingLotOptional = parkingLotRepository.findById(orders.getParkingLotId());
         if(parkingLotOptional==null || !parkingLotOptional.isPresent())
             throw new NotFoundException(PARKING_LOT_NOT_FOUND);
-        parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotOptional.get().getId(), orders.getParkingBlockPosition());
+        parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotOptional.get().getId(),
+                orders.getParkingBlockPosition());
         parkingBlock.setStatus(OCCUPIED);
         return parkingBlockRepository.save(parkingBlock);
     }
 
     public void updateParkingBlockStatusToAvailable(Long parkingLotId, Integer parkingBlockPosition) {
-        ParkingBlock parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition);
+        ParkingBlock parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId,
+                parkingBlockPosition);
         parkingBlock.setStatus(AVAILABLE);
         parkingBlockRepository.save(parkingBlock);
     }
