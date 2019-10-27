@@ -9,7 +9,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.NotSupportedException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +36,7 @@ public class OrdersService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
-    public Orders saveIfHasAvailableParkingBlocks(Orders order, Long parkingBoyId) throws NotFoundException, NotSupportedException {
+    public Orders saveIfHasAvailableParkingBlocks(Orders order, Long parkingBoyId) throws NotFoundException {
         if (order.getParkingLotId() != null
                 && !order.getPlateNumber().isEmpty()
                 && order.getParkingBlockPosition() != null) {
