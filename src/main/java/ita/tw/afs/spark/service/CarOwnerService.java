@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
@@ -46,5 +47,13 @@ public class CarOwnerService {
             return carOwner;
         }
         throw new InvalidCredentialsException("Incorrect username/password.");
+    }
+
+    public CarOwner signUp(CarOwner carOwner) throws ExistingCredentialException {
+        CarOwner fetchedCarOwner = carOwnerRepository.findByUsernameOrPassword(carOwner.getUsername(), carOwner.getPassword());
+        if(Objects.isNull(fetchedCarOwner)){
+            return carOwnerRepository.save(carOwner);
+        }
+        throw new ExistingCredentialException("Username or Password is existing");
     }
 }
