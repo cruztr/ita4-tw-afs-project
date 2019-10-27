@@ -1,10 +1,8 @@
 package ita.tw.afs.spark.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 public class Orders {
@@ -14,7 +12,10 @@ public class Orders {
 
     private Long parkingLotId;
     private Integer parkingBlockPosition;
-    private Long reservationNumber;
+
+//    private Long reservationNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Reservation reservation;
     private String plateNumber;
     private String status;
     private String timeIn;
@@ -66,12 +67,20 @@ public class Orders {
         this.status = status;
     }
 
-    public Long getReservationNumber() {
-        return reservationNumber;
+//    public Long getReservationNumber() {
+//        return reservationNumber;
+//    }
+//
+//    public void setReservationNumber(Long reservationNumber) {
+//        this.reservationNumber = reservationNumber;
+//    }
+
+    public Optional<Reservation> getReservation() {
+        return Optional.ofNullable(reservation);
     }
 
-    public void setReservationNumber(Long reservationNumber) {
-        this.reservationNumber = reservationNumber;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     public String getTimeIn() {
