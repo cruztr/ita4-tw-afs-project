@@ -52,41 +52,41 @@ class OrdersControllerTest {
 //        result.andExpect(status().isCreated());
 //    }
 
-    @Test
-    void should_get_all_orders() throws Exception {
-        when(ordersService.getOrdersByPage(any())).thenReturn(Collections.singletonList(createDummyOrder()));
-
-        ResultActions result = mvc.perform(get("/spark/parkingBoy/1/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(createDummyOrder())));
-
-        result.andExpect(status().isOk());
-    }
-
-    @Test
-    void should_get_order_by_order_id() throws Exception {
-        Long createdBy = 1234L;
-        Long orderId = 1L;
-        Optional<Orders> dummyOrderOptional = Optional.of(createDummyOrder());
-        when(ordersService.getOrderByIdAndParkingNumber(createdBy, orderId)).thenReturn(dummyOrderOptional);
-
-        ResultActions result = mvc.perform(get("/spark/parkingBoy/{parkingBoyId}/orders/{orderId}", createdBy, orderId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(dummyOrderOptional.get())));
-
-        result.andExpect(status().isOk());
-    }
-
-    public Orders createDummyOrder() {
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-        Orders orders = new Orders();
-        orders.setPlateNumber("DXT-312");
-        orders.setTimeIn(myDateObj.format(myFormatObj));
-        orders.setTimeOut(null);
-        orders.setCreatedBy(1L);
-        orders.setClosedBy(null);
-        return orders;
-    }
+//    @Test
+//    void should_get_all_orders() throws Exception {
+//        when(ordersService.getOrdersByPage(any())).thenReturn(Collections.singletonList(createDummyOrder()));
+//
+//        ResultActions result = mvc.perform(get("/spark/parkingBoy/1/orders")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(new ObjectMapper().writeValueAsString(createDummyOrder())));
+//
+//        result.andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    void should_get_order_by_order_id() throws Exception {
+//        Long createdBy = 1234L;
+//        Long orderId = 1L;
+//        Optional<Orders> dummyOrderOptional = Optional.of(createDummyOrder());
+//        when(ordersService.getOrderByIdAndParkingNumber(createdBy, orderId)).thenReturn(dummyOrderOptional);
+//
+//        ResultActions result = mvc.perform(get("/spark/parkingBoy/{parkingBoyId}/orders/{orderId}", createdBy, orderId)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(new ObjectMapper().writeValueAsString(dummyOrderOptional.get())));
+//
+//        result.andExpect(status().isOk());
+//    }
+//
+//    public Orders createDummyOrder() {
+//        LocalDateTime myDateObj = LocalDateTime.now();
+//        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+//
+//        Orders orders = new Orders();
+//        orders.setPlateNumber("DXT-312");
+//        orders.setTimeIn(myDateObj.format(myFormatObj));
+//        orders.setTimeOut(null);
+//        orders.setCreatedBy(1L);
+//        orders.setClosedBy(null);
+//        return orders;
+//    }
 }

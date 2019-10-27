@@ -2,7 +2,6 @@ package ita.tw.afs.spark.service;
 
 
 import ita.tw.afs.spark.model.Orders;
-import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.OrdersRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
@@ -39,10 +38,10 @@ public class OrdersService {
                 && order.getParkingBlockPosition() != null) {
             Optional<ParkingLot> parkingLot = parkingLotRepository.findById(order.getParkingLotId());
             if (parkingLot.isPresent()) {
-                ParkingBlock parkingBlock = parkingLotService.
-                        checkIfParkingBlockPositionIsValid(order.getParkingLotId(),
+                Boolean isParkingBlockValid = parkingLotService.checkIfParkingBlockPositionIsValid(order.getParkingLotId(),
                         order.getParkingBlockPosition());
-                return saveOrderAndUpdateParkingBlockStatus(order, parkingBoyId);
+                if(isParkingBlockValid)
+                    return saveOrderAndUpdateParkingBlockStatus(order, parkingBoyId);
             }
             throw new NotFoundException(PARKING_LOT_NOT_FOUND);
         }
@@ -58,16 +57,14 @@ public class OrdersService {
         return ordersRepository.save(orders);
     }
 
-    public Iterable<Orders> getOrdersByPage(Long createdBy) {
-        return ordersRepository.findAllByCreatedBy(createdBy);
+    public Iterable<Orders> getOrdersByPage() {
+        return ordersRepository.findAll();
     }
 
-    public Optional<Orders> getOrderByIdAndParkingNumber(Long createdBy, Long orderId) throws NotFoundException {
-        Optional<Orders> checkIfOrderExists = ordersRepository.findByOrderIdAndCreatedBy(orderId, createdBy);
-
-        if (checkIfOrderExists.isPresent()) {
+    public Optional<Orders> getOrderById(Long orderId) throws NotFoundException {
+        Optional<Orders> checkIfOrderExists = ordersRepository.findById(orderId);
+        if (checkIfOrderExists.isPresent())
             return checkIfOrderExists;
-        }
 
         throw new NotFoundException(OBJECT_NOT_FOUND);
     }
