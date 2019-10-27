@@ -7,12 +7,12 @@ logging:
       hibernate: DEBUG
 spring:
   datasource:
-    url:  jdbc:h2:mem:./h2/org
+    url:  jdbc:mysql://10.222.112.183:3306/sparks-db?serverTimezone=Australia/Sydney
+    username: sparks-users
+    password: sparksDB
   jpa:
+    database: mysql
     hibernate:
-      ddl-auto: update
-  h2:
-    console:
-      enabled: true
+      ddl-auto: create-drop
 server:
-  port : 8080
+  port : 8089
