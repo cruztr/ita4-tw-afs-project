@@ -21,6 +21,7 @@ public class Orders {
     private String timeOut;
     private Long createdBy;
     private Long closedBy;
+    private Double price;
 
     public Orders() {
     }
@@ -105,6 +106,11 @@ public class Orders {
         this.closedBy = closedBy;
     }
 
+    public Double getPrice() {
+        return price;
+    }
 
-
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }
