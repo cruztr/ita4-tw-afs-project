@@ -1,7 +1,8 @@
 package ita.tw.afs.spark.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,12 +16,10 @@ public class ParkingLot {
     private String location;
     private Integer capacity;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parkingLot")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ParkingBlock> parkingBlocks;
 
-    public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
-        this.parkingBlocks = parkingBlocks;
-    }
+    private Double rate;
 
     public ParkingLot() {
     }
@@ -61,5 +60,16 @@ public class ParkingLot {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
+    public void setParkingBlocks(List<ParkingBlock> parkingBlockList) {
     }
 }

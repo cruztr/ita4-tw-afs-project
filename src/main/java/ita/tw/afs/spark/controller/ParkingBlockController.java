@@ -33,7 +33,7 @@ public class ParkingBlockController {
         if(parkingBlockOptional.isPresent())
             return parkingBlockOptional.get();
 
-        throw  new NotFoundException(PARKING_BLOCK_NOT_FOUND);
+        throw new NotFoundException(PARKING_BLOCK_NOT_FOUND);
     }
 
 }

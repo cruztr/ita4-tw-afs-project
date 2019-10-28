@@ -2,7 +2,7 @@ package ita.tw.afs.spark.model;
 
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Orders {
@@ -10,16 +10,19 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<ParkingLot> parkingLot;
+    private Long parkingLotId;
+    private Integer parkingBlockPosition;
 
-    @Column(unique = true)
+//    private Long reservationNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Reservation reservation;
     private String plateNumber;
-
+    private String status;
     private String timeIn;
     private String timeOut;
     private Long createdBy;
     private Long closedBy;
+    private Double price;
 
     public Orders() {
     }
@@ -32,12 +35,20 @@ public class Orders {
         this.orderId = orderId;
     }
 
-    public List<ParkingLot> getParkingLot() {
-        return parkingLot;
+    public Long getParkingLotId() {
+        return parkingLotId;
     }
 
-    public void setParkingLot(List<ParkingLot> parkingLot) {
-        this.parkingLot = parkingLot;
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+    public Integer getParkingBlockPosition() {
+        return parkingBlockPosition;
+    }
+
+    public void setParkingBlockPosition(Integer parkingBlockPosition) {
+        this.parkingBlockPosition = parkingBlockPosition;
     }
 
     public String getPlateNumber() {
@@ -46,6 +57,30 @@ public class Orders {
 
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+//    public Long getReservationNumber() {
+//        return reservationNumber;
+//    }
+//
+//    public void setReservationNumber(Long reservationNumber) {
+//        this.reservationNumber = reservationNumber;
+//    }
+
+    public Optional<Reservation> getReservation() {
+        return Optional.ofNullable(reservation);
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     public String getTimeIn() {
@@ -80,6 +115,11 @@ public class Orders {
         this.closedBy = closedBy;
     }
 
+    public Double getPrice() {
+        return price;
+    }
 
-
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }

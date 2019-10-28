@@ -1,19 +1,21 @@
 package ita.tw.afs.spark.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
-public class ParkingBoy {
+public class CarOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
     private String password;
+    private String plateNumber;
     private String firstName;
     private String lastName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "carOwner")
+    private List<Reservation> reservation;
 
     public Long getId() {
         return id;
@@ -39,6 +41,14 @@ public class ParkingBoy {
         this.password = password;
     }
 
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -53,5 +63,9 @@ public class ParkingBoy {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setReservation(List<Reservation> reservation) {
+        this.reservation = reservation;
     }
 }

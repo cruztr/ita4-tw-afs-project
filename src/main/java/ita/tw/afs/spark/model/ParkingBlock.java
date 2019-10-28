@@ -5,19 +5,15 @@ import javax.persistence.*;
 @Entity
 public class ParkingBlock {
 
-    public static final String AVAILABLE = "AVAILABLE";
+    private static final String AVAILABLE = "AVAILABLE";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
     private Integer position;
     private String status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ParkingLot parkingLot;
-
-    public ParkingLot getParkingLot() {
-        return parkingLot;
-    }
+    private Long parkingLotId;
 
     public ParkingBlock() {
     }
@@ -26,12 +22,8 @@ public class ParkingBlock {
         this.id = id;
         this.position = position;
         this.status = AVAILABLE;
-        this.parkingLot = parkingLot;
     }
 
-    public void setParkingLot(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
-    }
 
     public Long getId() {
         return id;
@@ -39,6 +31,14 @@ public class ParkingBlock {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
     }
 
     public Integer getPosition() {
