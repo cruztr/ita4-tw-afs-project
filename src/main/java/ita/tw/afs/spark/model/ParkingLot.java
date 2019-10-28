@@ -72,4 +72,8 @@ public class ParkingLot {
 
     public void setParkingBlocks(List<ParkingBlock> parkingBlockList) {
     }
+
+    public List<ParkingBlock> getParkingBlocks() {
+        return parkingBlocks;
+    }
 }
