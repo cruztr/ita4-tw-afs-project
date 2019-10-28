@@ -10,6 +10,7 @@ import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -88,8 +89,8 @@ public class OrdersService {
         throw new NotFoundException(OBJECT_NOT_FOUND);
     }
 
-    public Optional<Orders> closeOrderById(Long parkingBoyId, Long orderId) throws NotFoundException {
-        Optional<Orders> orders = ordersRepository.findById(orderId);
+    public Optional<Orders> closeOrderById(Long parkingBoyId, Orders orderId) throws NotFoundException {
+        Optional<Orders> orders = ordersRepository.findByParkingBlockPositionAndParkingLotId(orderId.getParkingBlockPosition(), orderId.getParkingLotId());
 
         if(orders.isPresent()){
             if(orders.get().getTimeOut() == null ||
@@ -132,5 +133,9 @@ public class OrdersService {
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         return myDateObj.format(myFormatObj);
+    }
+
+    public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPosition(Orders orders) {
+        return ordersRepository.findByParkingBlockPositionAndParkingLotId(orders.getParkingBlockPosition(), orders.getParkingLotId());
     }
 }
