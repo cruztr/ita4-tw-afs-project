@@ -32,6 +32,12 @@ public class ParkingLotController {
         return parkingLotService.getAll();
     }
 
+    @GetMapping(path = "/available", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<ParkingLot> getAvailableParkingLots(){
+        return parkingLotService.getAvailableParkingLots();
+    }
+
     @GetMapping(value = "/{id}", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.OK)
     public ParkingLot getParkingLot(@PathVariable Long id) throws NotFoundException {

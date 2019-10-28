@@ -165,7 +165,7 @@ class ParkingLotServiceTest {
     @Test
     void should_get_all_parking_lot_with_available_parking_block_space() {
         when(parkingLotRepository.findAll()).thenReturn(parkingLotList);
-        List<ParkingLot> availableParkingLots = parkingLotService.getAvailableParkingLot();
+        List<ParkingLot> availableParkingLots = parkingLotService.getAvailableParkingLots();
         Assert.assertThat(parkingLotList, is(availableParkingLots));
     }
 }

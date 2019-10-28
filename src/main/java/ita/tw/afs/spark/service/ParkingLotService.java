@@ -56,7 +56,7 @@ public class ParkingLotService {
         return parkingLotRepo.findAll();
     }
 
-    public List<ParkingLot> getAvailableParkingLot() {
+    public List<ParkingLot> getAvailableParkingLots() {
         List<ParkingLot> availableParkingLots = parkingLotRepo.findAll()
                 .stream().filter(parkingLot -> parkingLotHasAvailableSpace(parkingLot))
                 .collect(Collectors.toList());

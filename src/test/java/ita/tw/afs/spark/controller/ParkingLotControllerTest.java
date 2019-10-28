@@ -1,6 +1,7 @@
 package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.service.ParkingLotService;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -58,6 +61,33 @@ class ParkingLotControllerTest {
         when(parkingLotService.getAll()).thenReturn(singletonList(new ParkingLot()));
 
         ResultActions resultActions = mockMvc.perform(get("/parkingLot"));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void should_return_list_of_available_parking_lots() throws Exception {
+        List<ParkingBlock> parkingBlockList = new ArrayList<>();
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        ParkingLot parkingLot = new ParkingLot(1L, "ParkingLot1", 3);
+        parkingLot.setRate(10.00);
+        parkingLot.setLocation("Mnl");
+
+
+        ParkingBlock parkingBlock = new ParkingBlock();
+        parkingBlock.setId(1L);
+        parkingBlock.setStatus("AVAILABLE");
+        parkingBlock.setParkingLotId(1L);
+        parkingBlock.setPosition(15);
+
+        parkingBlockList.add(parkingBlock);
+        parkingLot.setParkingBlocks(parkingBlockList);
+
+        parkingLotList.add(parkingLot);
+        when(parkingLotService.getAvailableParkingLots()).thenReturn(parkingLotList);
+
+        ResultActions resultActions = mockMvc.perform(get("/parkingLot/available"));
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
