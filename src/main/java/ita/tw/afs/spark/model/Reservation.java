@@ -15,6 +15,11 @@ public class Reservation {
     @ManyToOne(cascade = CascadeType.ALL)
     private CarOwner carOwner;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    ParkingLot parkingLot;
+
+    private Integer position;
+
     public Long getReservationNumber() {
         return reservationNumber;
     }
@@ -53,5 +58,21 @@ public class Reservation {
 
     public void setCarOwner(CarOwner carOwner) {
         this.carOwner = carOwner;
+    }
+
+    public ParkingLot getParkingLot() {
+        return parkingLot;
+    }
+
+    public void setParkingLot(ParkingLot parkingLot) {
+        this.parkingLot = parkingLot;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

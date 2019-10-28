@@ -3,8 +3,12 @@ package ita.tw.afs.spark.service;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
+import ita.tw.afs.spark.model.ParkingBlock;
+import ita.tw.afs.spark.model.ParkingLot;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +19,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -24,6 +32,8 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles(profiles = "CarOwnerServiceTest")
 class CarOwnerServiceTest {
 
+    public static final String RESERVED = "RESERVED";
+    public static final String AVAILABLE = "AVAILABLE";
     @MockBean
     private CarOwnerRepository carOwnerRepository;
 
@@ -35,6 +45,8 @@ class CarOwnerServiceTest {
 
     private CarOwner carOwner;
 
+    private Reservation reservation;
+
     @BeforeEach
     public void setUp(){
         carOwner = new CarOwner();
@@ -43,6 +55,30 @@ class CarOwnerServiceTest {
         carOwner.setPassword("Amikewashicho");
         carOwner.setUsername("mikeCrophones07");
         carOwner.setPlateNumber("PLT=2734");
+
+        ParkingBlock parkingBlock = new ParkingBlock();
+        parkingBlock.setParkingLotId(1L);
+        parkingBlock.setId(1L);
+        parkingBlock.setPosition(1);
+        parkingBlock.setStatus(AVAILABLE);
+
+        List<ParkingBlock> parkingBlockList = new ArrayList<>();
+        parkingBlockList.add(parkingBlock);
+
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.setParkingBlocks(parkingBlockList);
+
+        reservation = new Reservation();
+        reservation.setStatus(RESERVED);
+        reservation.setParkingLot(parkingLot);
+    }
+
+    @Test
+    void should_return_reservation_when_information_is_valid() {
+        when(reservationRepository.save(anyObject())).thenReturn(reservation);
+
+        Reservation myReservation = carOwnerService.createReservation(reservation);
+        Assert.assertThat(reservation, is(myReservation));
     }
 
     @Test
