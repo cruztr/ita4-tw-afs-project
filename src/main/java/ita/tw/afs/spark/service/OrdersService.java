@@ -3,8 +3,10 @@ package ita.tw.afs.spark.service;
 
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.model.ParkingLot;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.OrdersRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
+import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,16 @@ public class OrdersService {
     private static final String CLOSED = "CLOSED";
     private static final int BONUS_HOUR = 1;
     private static final String OPEN = "OPEN";
+    public static final String CONFIRMED = "CONFIRMED";
 
     @Autowired
     OrdersRepository ordersRepository;
 
     @Autowired
     ParkingBlockService parkingBlockService;
+
+    @Autowired
+    ReservationRepository reservationRepository;
 
     @Autowired
     ParkingLotService parkingLotService;
@@ -44,8 +50,17 @@ public class OrdersService {
             if (parkingLot.isPresent()) {
                 Boolean isParkingBlockValid = parkingLotService.checkIfParkingBlockPositionIsValid(order.getParkingLotId(),
                         order.getParkingBlockPosition());
-                if(isParkingBlockValid)
-                    return saveOrderAndUpdateParkingBlockStatus(order, parkingBoyId);
+                if(isParkingBlockValid){
+                    if(order.getReservation().isPresent()){
+                        Long reservationNumber = order.getReservation().get().getReservationNumber();
+                        Reservation reservation = reservationRepository.findOneByReservationNumber(reservationNumber);
+
+                        reservation.setStatus(CONFIRMED);
+                        reservationRepository.save(reservation);
+                        order.setReservation(reservation);
+                    }
+                }
+                return saveOrderAndUpdateParkingBlockStatus(order, parkingBoyId);
             }
             throw new NotFoundException(PARKING_LOT_NOT_FOUND);
         }
