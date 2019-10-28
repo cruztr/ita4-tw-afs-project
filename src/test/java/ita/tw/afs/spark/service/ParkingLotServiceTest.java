@@ -5,6 +5,7 @@ import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -43,17 +45,23 @@ class ParkingLotServiceTest {
 
     @BeforeEach
     void setUp() {
+        List<ParkingBlock> parkingBlockList = new ArrayList<>();
         parkingLotList = new ArrayList<>();
         parkingLot = new ParkingLot(1L, "ParkingLot1", 3);
         parkingLot.setRate(10.00);
         parkingLot.setLocation("Mnl");
-        parkingLotList.add(parkingLot);
+
 
         parkingBlock = new ParkingBlock();
         parkingBlock.setId(1L);
         parkingBlock.setStatus("AVAILABLE");
         parkingBlock.setParkingLotId(1L);
         parkingBlock.setPosition(15);
+
+        parkingBlockList.add(parkingBlock);
+        parkingLot.setParkingBlocks(parkingBlockList);
+
+        parkingLotList.add(parkingLot);
     }
 
     @Test
@@ -152,5 +160,12 @@ class ParkingLotServiceTest {
         assertThrows(NotFoundException.class, () -> {
             parkingLotService.checkIfParkingBlockPositionIsValid(3L, parkingBlockPosition);
         });
+    }
+
+    @Test
+    void should_get_all_parking_lot_with_available_parking_block_space() {
+        when(parkingLotRepository.findAll()).thenReturn(parkingLotList);
+        List<ParkingLot> availableParkingLots = parkingLotService.getAvailableParkingLot();
+        Assert.assertThat(parkingLotList, is(availableParkingLots));
     }
 }

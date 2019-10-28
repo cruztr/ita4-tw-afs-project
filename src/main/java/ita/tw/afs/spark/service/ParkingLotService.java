@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ParkingLotService {
@@ -22,6 +23,7 @@ public class ParkingLotService {
     private static final String PLEASE_INPUT_A_VALID_RATE = "PLEASE INPUT A VALID RATE";
     private static final String PARKING_BLOCK_NOT_FOUND = "PARKING BLOCK NOT FOUND";
     private static final String PARKING_BLOCK_IS_ALREADY_OCCUPIED = "PARKING BLOCK IS ALREADY OCCUPIED";
+    public static final String AVAILABLE1 = "AVAILABLE";
 
     @Autowired
     private ParkingLotRepository parkingLotRepo;
@@ -52,6 +54,21 @@ public class ParkingLotService {
 
     public List<ParkingLot> getAll() {
         return parkingLotRepo.findAll();
+    }
+
+    public List<ParkingLot> getAvailableParkingLot() {
+        List<ParkingLot> availableParkingLots = parkingLotRepo.findAll()
+                .stream().filter(parkingLot -> parkingLotHasAvailableSpace(parkingLot))
+                .collect(Collectors.toList());
+        return availableParkingLots;
+    }
+
+    private Boolean parkingLotHasAvailableSpace(ParkingLot parkingLot){
+        List<ParkingBlock> parkingBlocks = parkingLot.getParkingBlocks();
+        List<ParkingBlock> availableBlocks = parkingBlocks.stream()
+                .filter(parkingBlock -> (parkingBlock.getStatus().equals(AVAILABLE)))
+                .collect(Collectors.toList());
+        return availableBlocks.size() >= 1;
     }
 
     private List<ParkingBlock> createParkingBlockList(ParkingLot parkingLot) {
