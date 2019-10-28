@@ -1,6 +1,7 @@
 package ita.tw.afs.spark.ErrorHandler;
 
-import ita.tw.afs.spark.error.CustomError;
+import ita.tw.afs.spark.dto.CustomError;
+import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,20 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public CustomError handleInvalidCredentialException(InvalidCredentialsException e){
-        return new CustomError(204, e.getMessage());
+        return new CustomError(404, e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public CustomError handleNotFoundException(NotFoundException e){
+        return new CustomError(404, e.getMessage());
+    }
+
+    @ExceptionHandler(ExistingCredentialException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public CustomError handleExistingCredentialException(ExistingCredentialException e){
         return new CustomError(404, e.getMessage());
     }
 }

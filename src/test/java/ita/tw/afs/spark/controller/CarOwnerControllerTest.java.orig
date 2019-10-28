@@ -59,9 +59,14 @@ public class CarOwnerControllerTest {
 
         when(carOwnerService.createReservation(reservation)).thenReturn(reservation);
 
+<<<<<<< HEAD
+        ResultActions result = mockmvc.perform(post("/spark/carOwner")
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reservation)));
+=======
         ResultActions result = mockMvc.perform(post("/spark/carOwner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(reservation)));
+>>>>>>> Login-App_User
         result.andExpect(status().isCreated());
     }
 
