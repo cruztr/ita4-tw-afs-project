@@ -6,6 +6,7 @@ import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -41,18 +43,18 @@ class ParkingBlockServiceTest {
     void setUp() {
         parkingBlock = new ParkingBlock();
         parkingBlock.setId(1L);
-        parkingBlock.setStatus("OPEN");
+        parkingBlock.setStatus("OCCUPIED");
         parkingBlock.setParkingLotId(1L);
         parkingBlock.setPosition(15);
     }
 
     @Test
-    public void should_get_all_parking_blocks(){
+    public void should_get_all_parking_blocks() {
         when(parkingBlockRepository.findAll()).thenReturn(singletonList(parkingBlock));
 
         assertSame(parkingBlockService.getAll().get(0), parkingBlock);
         assertSame(parkingBlockService.getAll().get(0).getId(), 1L);
-        assertSame(parkingBlockService.getAll().get(0).getStatus(), "OPEN");
+        assertSame(parkingBlockService.getAll().get(0).getStatus(), "OCCUPIED");
     }
 
     @Test
@@ -90,6 +92,15 @@ class ParkingBlockServiceTest {
         assertThrows(NotFoundException.class, () -> {
             parkingBlockService.updateParkingBlockStatusToOccupied(order);
         });
+    }
 
+    @Test
+    void should_update_parkingBlock_status_to_available() {
+        Long parkingLotId = 2L;
+        Integer parkingBlockPosition = 3;
+        when(parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition))
+                .thenReturn(parkingBlock);
+        when(parkingBlockRepository.save(any())).thenReturn(parkingBlock);
+        parkingBlockService.updateParkingBlockStatusToAvailable(parkingLotId, parkingBlockPosition);
     }
 }
