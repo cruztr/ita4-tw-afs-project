@@ -1,7 +1,9 @@
 package ita.tw.afs.spark.ErrorHandler;
 
-import ita.tw.afs.spark.dto.CustomError;
+import ita.tw.afs.spark.Util.SparkUtil;
+import ita.tw.afs.spark.dto.GeneralResponse;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
+import ita.tw.afs.spark.exception.GeneralException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.ArrayList;
+
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -17,21 +21,28 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public CustomError handleInvalidCredentialException(InvalidCredentialsException e){
-        return new CustomError(404, e.getMessage());
+    public GeneralResponse handleInvalidCredentialException(InvalidCredentialsException e){
+        return new GeneralResponse(404, e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public CustomError handleNotFoundException(NotFoundException e){
-        return new CustomError(404, e.getMessage());
+    public GeneralResponse handleNotFoundException(NotFoundException e){
+        return new GeneralResponse(404, e.getMessage());
     }
 
     @ExceptionHandler(ExistingCredentialException.class)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public CustomError handleExistingCredentialException(ExistingCredentialException e){
-        return new CustomError(404, e.getMessage());
+    public GeneralResponse handleExistingCredentialException(ExistingCredentialException e){
+        return new GeneralResponse(404, e.getMessage());
+    }
+
+    @ExceptionHandler(GeneralException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public GeneralResponse GeneralException(GeneralException e){
+        return SparkUtil.setGeneralResponseInternalServerError(e.getMessage(), new ArrayList<>());
     }
 }

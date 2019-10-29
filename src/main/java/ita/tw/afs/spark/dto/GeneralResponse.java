@@ -2,12 +2,12 @@ package ita.tw.afs.spark.dto;
 
 import java.util.List;
 
-public class CustomError {
+public class GeneralResponse {
     private int code;
     private String message;
     public List<TypeValuePair> typeValuePairs;
 
-    public CustomError(int code, String message) {
+    public GeneralResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }
