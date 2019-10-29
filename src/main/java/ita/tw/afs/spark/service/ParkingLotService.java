@@ -4,6 +4,7 @@ import ita.tw.afs.spark.dto.ParkingLotResponse;
 import ita.tw.afs.spark.mapper.ParkingLotMapper;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
@@ -26,6 +27,7 @@ public class ParkingLotService {
     private static final String PARKING_BLOCK_NOT_FOUND = "PARKING BLOCK NOT FOUND";
     private static final String PARKING_BLOCK_IS_ALREADY_OCCUPIED = "PARKING BLOCK IS ALREADY OCCUPIED";
     public static final String AVAILABLE1 = "AVAILABLE";
+    public static final String RESERVED = "RESERVED";
 
     @Autowired
     private ParkingLotRepository parkingLotRepo;
@@ -101,12 +103,15 @@ public class ParkingLotService {
         throw new NotFoundException(PARKING_LOT_NOT_FOUND);
     }
 
-    public Boolean checkIfParkingBlockPositionIsValid(Long parkingLotId, Integer parkingBlockPosition) throws NotFoundException {
+    public Boolean checkIfParkingBlockPositionIsValid(Long parkingLotId, Integer parkingBlockPosition, Optional<Reservation> reservation) throws NotFoundException {
         ParkingBlock parkingBlock = parkingBlockRepo.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition);
 
         if(parkingBlock != null) {
-            if(parkingBlock.getStatus().equals(AVAILABLE))
+            if(parkingBlock.getStatus().equals(AVAILABLE)){
                 return true;
+            } else if (parkingBlock.getStatus().equals(RESERVED) && reservation.isPresent()){
+                return true;
+            }
 
             throw new NotFoundException(PARKING_BLOCK_IS_ALREADY_OCCUPIED);
         }

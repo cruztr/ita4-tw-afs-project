@@ -1,11 +1,11 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +42,7 @@ class ParkingLotServiceTest {
     private ParkingLot parkingLot;
     private List<ParkingLot> parkingLotList;
     private ParkingBlock parkingBlock;
+    private Optional<Orders> order;
 
     @BeforeEach
     void setUp() {
@@ -62,6 +63,7 @@ class ParkingLotServiceTest {
         parkingLot.setParkingBlocks(parkingBlockList);
 
         parkingLotList.add(parkingLot);
+        order = Optional.of(new Orders());
     }
 
     @Test
@@ -128,12 +130,14 @@ class ParkingLotServiceTest {
 
     @Test
     void should_return_true_if_parking_block_status_is_available() throws NotFoundException {
+
+
         Long parkingLotId = 2L;
         Integer parkingBlockPosition = 3;
         when(parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition))
                 .thenReturn(parkingBlock);
 
-        assertTrue(parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition));
+        assertTrue(parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition, order.get().getReservation()));
     }
 
     @Test
@@ -145,7 +149,7 @@ class ParkingLotServiceTest {
                 .thenReturn(parkingBlock);
 
         assertThrows(NotFoundException.class, () -> {
-            parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition);
+            parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition, order.get().getReservation());
         });
     }
 
@@ -158,7 +162,7 @@ class ParkingLotServiceTest {
                 .thenReturn(parkingBlock);
 
         assertThrows(NotFoundException.class, () -> {
-            parkingLotService.checkIfParkingBlockPositionIsValid(3L, parkingBlockPosition);
+            parkingLotService.checkIfParkingBlockPositionIsValid(3L, parkingBlockPosition, order.get().getReservation());
         });
     }
 
