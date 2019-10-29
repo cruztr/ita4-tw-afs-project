@@ -9,9 +9,11 @@ import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.NotSupportedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -21,9 +23,13 @@ import java.util.Optional;
 @Service
 public class CarOwnerService {
 
-    public static final String RESERVED = "RESERVED";
-    public static final String AVAILABLE = "AVAILABLE";
+    private static final String RESERVED = "RESERVED";
+    private static final String AVAILABLE = "AVAILABLE";
     private static final String CANCELLED = "CANCELLED";
+    private static final String USERNAME_IS_EXISTING = "Username is existing";
+    private static final String INCORRECT_USERNAME_PASSWORD = "Incorrect username/password.";
+    private static final String PLEASE_INPUT_ALL_REQUIRED_FIELDS = "Please input all required fields";
+    private static final String PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS = "Password must be at least 8 characters.";
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -55,7 +61,6 @@ public class CarOwnerService {
 
     }
 
-
     public Optional<Reservation> cancelReservation(Long reservationId) {
         Optional<Reservation> myReservation = reservationRepository.findById(reservationId);
         ParkingBlock reservedParkingBlock = parkingBlockService.findByParkingLotIdAndPosition(myReservation.get().getParkingLotId(), myReservation.get().getPosition());
@@ -81,15 +86,23 @@ public class CarOwnerService {
         if(Objects.nonNull(carOwner)){
             return carOwner;
         }
-        throw new InvalidCredentialsException("Incorrect username/password.");
+        throw new InvalidCredentialsException(INCORRECT_USERNAME_PASSWORD);
     }
 
-    public CarOwner signUp(CarOwner carOwner) throws ExistingCredentialException {
-        CarOwner fetchedCarOwner = carOwnerRepository.findByUsernameOrPassword(carOwner.getUsername(), carOwner.getPassword());
-        if(Objects.isNull(fetchedCarOwner)){
-            return carOwnerRepository.save(carOwner);
+    public CarOwner signUp(CarOwner carOwner) throws ExistingCredentialException, NotFoundException {
+        if (!carOwner.getUsername().isEmpty() && !carOwner.getPassword().isEmpty()
+            && !carOwner.getPlateNumber().isEmpty() && !carOwner.getFirstName().isEmpty()
+            && !carOwner.getLastName().isEmpty()) {
+            if(carOwner.getPassword().length() >= 8) {
+                CarOwner fetchedCarOwner = carOwnerRepository.findByUsername(carOwner.getUsername());
+                if (Objects.isNull(fetchedCarOwner)) {
+                    return carOwnerRepository.save(carOwner);
+                }
+                throw new ExistingCredentialException(USERNAME_IS_EXISTING);
+            }
+            throw new NotFoundException(PASSWORD_MUST_BE_AT_LEAST_8_CHARACTERS);
         }
-        throw new ExistingCredentialException("Username or Password is existing");
+        throw new NotFoundException(PLEASE_INPUT_ALL_REQUIRED_FIELDS);
     }
 
     private String getCurrentDateTime() {
@@ -97,5 +110,4 @@ public class CarOwnerService {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         return myDateObj.format(myFormatObj);
     }
-
 }

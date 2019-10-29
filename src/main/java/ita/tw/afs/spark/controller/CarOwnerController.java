@@ -55,7 +55,7 @@ public class CarOwnerController {
     }
 
     @PostMapping(value = "/signUp", produces = {"application/json"})
-    public CarOwner signUp(@RequestBody CarOwner carOwner) throws ExistingCredentialException {
+    public CarOwner signUp(@RequestBody CarOwner carOwner) throws ExistingCredentialException, NotFoundException {
         CarOwner finalCarOwner = carOwnerService.signUp(carOwner);
         return finalCarOwner;
     }
