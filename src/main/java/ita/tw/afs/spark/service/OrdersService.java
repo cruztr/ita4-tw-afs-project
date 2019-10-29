@@ -1,6 +1,11 @@
 package ita.tw.afs.spark.service;
 
 
+import ita.tw.afs.spark.Util.SparkUtil;
+import ita.tw.afs.spark.dto.GeneralResponse;
+import ita.tw.afs.spark.dto.OrdersResponse;
+import ita.tw.afs.spark.exception.GeneralException;
+import ita.tw.afs.spark.mapper.OrdersMapper;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
@@ -15,6 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,8 +85,18 @@ public class OrdersService {
         return ordersRepository.save(orders);
     }
 
-    public Iterable<Orders> getOrdersByPage() {
-        return ordersRepository.findAll();
+    public List<OrdersResponse> getOrders() {
+        OrdersMapper mapper = new OrdersMapper();
+        List<OrdersResponse> mappedResponse = new ArrayList<>();
+        ordersRepository.findByStatus("OPEN").forEach(order -> {
+            HashMap<String, Object> keyValue = new HashMap<>();
+            keyValue.put("Order", order);
+            Optional<ParkingLot> parkingLot = parkingLotRepository.findById(order.getParkingLotId());
+            keyValue.put("ParkingLot", parkingLot.get());
+            mappedResponse.add(mapper.mappedResponse(keyValue));
+        });
+
+        return mappedResponse;
     }
 
     public Optional<Orders> getOrderById(Long orderId) throws NotFoundException {
@@ -89,26 +107,30 @@ public class OrdersService {
         throw new NotFoundException(OBJECT_NOT_FOUND);
     }
 
-    public Optional<Orders> closeOrderById(Long parkingBoyId, Orders orderId) throws NotFoundException {
-        Optional<Orders> orders = ordersRepository.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orderId.getParkingLotId(), orderId.getParkingBlockPosition(),"OPEN");
-
-        if(orders.isPresent()){
-            if(orders.get().getTimeOut() == null ||
-                    orders.get().getTimeOut().isEmpty()){
-                String timeIn = orders.get().getTimeIn();
-                String timeOut = getCurrentDateTime();
-                Long parkingLotId = orders.get().getParkingLotId();
-                Integer parkingBlockPosition = orders.get().getParkingBlockPosition();
-                orders.get().setStatus(CLOSED);
-                orders.get().setTimeOut(timeOut);
-                orders.get().setClosedBy(parkingBoyId);
-                orders.get().setPrice(computeOrderPrice(timeIn, timeOut, parkingLotId));
-                parkingBlockService.updateParkingBlockStatusToAvailable(parkingLotId, parkingBlockPosition);
-                return orders;
+    public GeneralResponse closeOrderById(Long parkingBoyId, Orders orderId) throws GeneralException,  NotFoundException  {
+        try {
+            Optional<Orders> orders = ordersRepository.findByParkingBlockPositionAndParkingLotIdAndStatus(orderId.getParkingBlockPosition(), orderId.getParkingLotId(), "OPEN");
+            if(orders.isPresent()){
+                if(orders.get().getTimeOut() == null ||
+                        orders.get().getTimeOut().isEmpty()){
+                    String timeIn = orders.get().getTimeIn();
+                    String timeOut = getCurrentDateTime();
+                    Long parkingLotId = orders.get().getParkingLotId();
+                    Integer parkingBlockPosition = orders.get().getParkingBlockPosition();
+                    orders.get().setStatus(CLOSED);
+                    orders.get().setTimeOut(timeOut);
+                    orders.get().setClosedBy(parkingBoyId);
+                    orders.get().setPrice(computeOrderPrice(timeIn, timeOut, parkingLotId));
+                    parkingBlockService.updateParkingBlockStatusToAvailable(parkingLotId, parkingBlockPosition);
+                    return SparkUtil.setGeneralResponseOk("Success closing orders!", null);
+                }
+                throw new NotFoundException(ORDER_ALREADY_CLOSED);
             }
-            throw new NotFoundException(ORDER_ALREADY_CLOSED);
+            throw new NotFoundException(OBJECT_NOT_FOUND);
         }
-        throw new NotFoundException(OBJECT_NOT_FOUND);
+        catch (Exception e){
+            throw new GeneralException("Something went wrong in the backend");
+        }
     }
 
     private Double computeOrderPrice(String timeIn, String timeOut, Long parkingLotId) {
@@ -136,6 +158,6 @@ public class OrdersService {
     }
 
     public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPositionAndStatus(Orders orders) {
-        return ordersRepository.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orders.getParkingLotId() ,orders.getParkingBlockPosition(), "OPEN");
+        return ordersRepository.findByParkingBlockPositionAndParkingLotIdAndStatus(orders.getParkingBlockPosition(), orders.getParkingLotId(), "OPEN");
     }
 }
