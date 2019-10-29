@@ -10,7 +10,6 @@ import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.security.x509.AVA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,7 @@ public class ParkingLotService {
 
         for (ParkingLot parkingLot: availableParkingLots) {
             ParkingLotMapper parkingLotMapper = new ParkingLotMapper(parkingLot);
-            parkingLotResponses.add(parkingLotMapper.mappedResponse(null));
+            parkingLotResponses.add(parkingLotMapper.mappedResponse(AVAILABLE));
         }
         return parkingLotResponses;
     }
