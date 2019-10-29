@@ -13,6 +13,7 @@ public class OrdersMapper {
 
         OrdersResponse ordersResponse = new OrdersResponse();
         ordersResponse.setOrderNumber(order.getOrderId());
+        ordersResponse.setKey(order.getOrderId());
         ordersResponse.setParkingLotName(parkingLot.getName());
         ordersResponse.setParkingLotId(parkingLot.getId());
         ordersResponse.setParkingBlockPosition(order.getParkingBlockPosition());

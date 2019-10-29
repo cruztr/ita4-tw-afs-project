@@ -2,6 +2,7 @@ package ita.tw.afs.spark.dto;
 
 public class OrdersResponse {
     private Long orderNumber;
+    private Long key;
     private String plateNumber;
     private String parkingLotName;
     private Long parkingLotId;
@@ -15,6 +16,14 @@ public class OrdersResponse {
 
     public void setOrderNumber(Long orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
     }
 
     public String getPlateNumber() {

@@ -1,6 +1,8 @@
 package ita.tw.afs.spark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ita.tw.afs.spark.Util.SparkUtil;
+import ita.tw.afs.spark.dto.OrdersResponse;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.repository.OrdersRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
@@ -18,7 +20,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -58,7 +62,7 @@ class OrdersControllerTest {
 
     @Test
     void should_get_all_orders() throws Exception {
-        when(ordersService.getOrdersByPage()).thenReturn(Collections.singletonList(createDummyOrder()));
+        when(ordersService.getOrders()).thenReturn(Arrays.asList(new OrdersResponse()));
 
         ResultActions result = mvc.perform(get("/spark/parkingBoy/orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +93,8 @@ class OrdersControllerTest {
         ordersOptional.get().setTimeOut(String.valueOf(LocalDateTime.now()));
         ordersOptional.get().setClosedBy(order.getOrderId());
         ordersOptional.get().setPrice(10.00);
-        when(ordersService.closeOrderById(parkingBoyId, order)).thenReturn(ordersOptional);
+
+        when(ordersService.closeOrderById(parkingBoyId, order)).thenReturn(SparkUtil.setGeneralResponseOk("Sample", null));
 
         ResultActions result = mvc.perform(patch("/spark/parkingBoy/{parkingBoyId}/orders", parkingBoyId)
                 .contentType(MediaType.APPLICATION_JSON)

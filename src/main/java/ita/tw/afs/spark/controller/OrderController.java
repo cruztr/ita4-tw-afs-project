@@ -1,6 +1,9 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.GeneralResponse;
 import ita.tw.afs.spark.dto.OrdersResponse;
+import ita.tw.afs.spark.dto.TypeValuePair;
+import ita.tw.afs.spark.exception.GeneralException;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.service.OrdersService;
 import javassist.NotFoundException;
@@ -41,7 +44,7 @@ public class OrderController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId, @RequestBody Orders orders) throws NotFoundException {
+    public GeneralResponse closeOrder(@PathVariable Long parkingBoyId, @RequestBody Orders orders) throws NotFoundException, GeneralException {
         return ordersService.closeOrderById(parkingBoyId, orders);
     }
 
