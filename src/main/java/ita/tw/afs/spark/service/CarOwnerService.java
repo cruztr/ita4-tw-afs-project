@@ -23,6 +23,7 @@ public class CarOwnerService {
 
     public static final String RESERVED = "RESERVED";
     public static final String AVAILABLE = "AVAILABLE";
+    private static final String CANCELLED = "CANCELLED";
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -54,6 +55,20 @@ public class CarOwnerService {
 
     }
 
+
+    public Optional<Reservation> cancelReservation(Long reservationId) {
+        Optional<Reservation> myReservation = reservationRepository.findById(reservationId);
+        ParkingBlock reservedParkingBlock = parkingBlockService.findByParkingLotIdAndPosition(myReservation.get().getParkingLotId(), myReservation.get().getPosition());
+
+        if(reservedParkingBlock.getStatus().contains(RESERVED) && myReservation.get().getStatus().contains(RESERVED)) {
+            reservedParkingBlock.setStatus(AVAILABLE);
+            parkingBlockService.save(reservedParkingBlock);
+            myReservation.get().setStatus(CANCELLED);
+            reservationRepository.save(myReservation.get());
+        }
+        return myReservation;
+    }
+
     private Integer getLastAvailableParkingBlock(List<ParkingBlock> parkingBlockList) {
         return parkingBlockList.stream()
                 .filter(parkingBlock -> (parkingBlock.getStatus().equals(AVAILABLE)))
@@ -82,4 +97,5 @@ public class CarOwnerService {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         return myDateObj.format(myFormatObj);
     }
+
 }
