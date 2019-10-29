@@ -47,7 +47,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/order",produces = APPLICATION_JSON_VALUE)
     public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPosition(@RequestBody Orders orders) throws NotFoundException {
-        return ordersService.getOrderByParkingLotIdAndParkingBlockPosition(orders);
+        return ordersService.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orders);
     }
 
 }

@@ -90,7 +90,7 @@ public class OrdersService {
     }
 
     public Optional<Orders> closeOrderById(Long parkingBoyId, Orders orderId) throws NotFoundException {
-        Optional<Orders> orders = ordersRepository.findByParkingBlockPositionAndParkingLotId(orderId.getParkingBlockPosition(), orderId.getParkingLotId());
+        Optional<Orders> orders = ordersRepository.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orderId.getParkingLotId(), orderId.getParkingBlockPosition(),"OPEN");
 
         if(orders.isPresent()){
             if(orders.get().getTimeOut() == null ||
@@ -135,7 +135,7 @@ public class OrdersService {
         return myDateObj.format(myFormatObj);
     }
 
-    public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPosition(Orders orders) {
-        return ordersRepository.findByParkingBlockPositionAndParkingLotId(orders.getParkingBlockPosition(), orders.getParkingLotId());
+    public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPositionAndStatus(Orders orders) {
+        return ordersRepository.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orders.getParkingLotId() ,orders.getParkingBlockPosition(), "OPEN");
     }
 }

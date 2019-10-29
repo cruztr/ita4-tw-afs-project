@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
-    Optional<Orders> findByParkingBlockPositionAndParkingLotId(Integer parkingBlockPosition, Long parkingLotId);
+    Optional<Orders> getOrderByParkingLotIdAndParkingBlockPositionAndStatus(Long parkingLotId, Integer parkingBlockPosition, String status);
 }
