@@ -1,6 +1,7 @@
 package ita.tw.afs.spark.controller;
 
 import ita.tw.afs.spark.model.Orders;
+import ita.tw.afs.spark.service.LogsService;
 import ita.tw.afs.spark.service.OrdersService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,25 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/spark/parkingBoy")
 public class OrderController {
 
+    public static final String PARKING_BOY = "Parking Boy";
+    public static final String ORDER = "Order";
+    public static final String CREATE_ORDER = "Create Order ";
+    public static final String CLOSE_ORDER = "Close Order ";
     @Autowired
     OrdersService ordersService;
+
+    @Autowired
+    private LogsService logsService;
 
     @PostMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Orders addOrder(@RequestBody Orders orders, @PathVariable Long parkingBoyId) throws NotFoundException, NotSupportedException {
-        return ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
+        Orders order = ordersService.saveIfHasAvailableParkingBlocks(orders, parkingBoyId);
+        logsService.createLogs(parkingBoyId,
+                PARKING_BOY, ORDER,
+                CREATE_ORDER + orders.getOrderId(),
+                orders.getTimeIn());
+        return order;
     }
 
     @GetMapping(value = "/orders", produces = APPLICATION_JSON_VALUE)
@@ -41,6 +54,10 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
     public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId,@RequestBody Orders orders) throws NotFoundException {
+        logsService.createLogs(parkingBoyId,
+                PARKING_BOY, ORDER,
+                CLOSE_ORDER + orders.getOrderId(),
+                orders.getTimeIn());
         return ordersService.closeOrderById(parkingBoyId, orders);
     }
 

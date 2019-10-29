@@ -6,6 +6,7 @@ import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.CarOwnerService;
 import javassist.NotFoundException;
+import ita.tw.afs.spark.service.LogsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,26 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value ="/spark/carOwner")
 public class CarOwnerController {
 
+    public static final String CAR_OWNER = "Car Owner";
+    public static final String RESERVATION = "Reservation";
+    public static final String CREATE_RESERVATION = "Create_Reservation ";
+
     @Autowired
     private CarOwnerService carOwnerService;
+
+    @Autowired
+    private LogsService logsService;
 
     @PostMapping(value = "parkingLot/{parkingLotId}", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.CREATED)
     public Reservation createReservation(@RequestBody Reservation reservation,
                                          @PathVariable Long parkingLotId) throws NotFoundException {
-        return carOwnerService.createReservation(reservation, parkingLotId);
+        Reservation reserve = carOwnerService.createReservation(reservation, parkingLotId);
+        logsService.createLogs(reservation.getCarOwnerId(),
+                CAR_OWNER, RESERVATION,
+                CREATE_RESERVATION + reservation.getReservationNumber(),
+                reservation.getApplicationTime());
+        return reserve;
     }
 
     @ResponseStatus(HttpStatus.OK)
