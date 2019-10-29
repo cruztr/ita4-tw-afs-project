@@ -83,15 +83,15 @@ class OrdersControllerTest {
     @Test
     void should_close_order_by_id() throws Exception {
         Long parkingBoyId = 111L;
-        Long orderId = 2L;
+        Orders order = new Orders();
+        order.setOrderId(2L);
         Optional<Orders> ordersOptional = Optional.of(createDummyOrder());
         ordersOptional.get().setTimeOut(String.valueOf(LocalDateTime.now()));
-        ordersOptional.get().setClosedBy(orderId);
+        ordersOptional.get().setClosedBy(order.getOrderId());
         ordersOptional.get().setPrice(10.00);
-        when(ordersService.closeOrderById(parkingBoyId, orderId)).thenReturn(ordersOptional);
+        when(ordersService.closeOrderById(parkingBoyId, order)).thenReturn(ordersOptional);
 
-        ResultActions result = mvc.perform(patch("/spark/parkingBoy/{parkingBoyId}/orders/{orderId}",
-                 parkingBoyId, orderId)
+        ResultActions result = mvc.perform(patch("/spark/parkingBoy/{parkingBoyId}/orders", parkingBoyId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(ordersOptional.get())));
 

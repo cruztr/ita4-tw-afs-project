@@ -39,8 +39,15 @@ public class OrderController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping(value = "/{parkingBoyId}/orders/{orderId}", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId, @PathVariable Long orderId) throws NotFoundException {
-        return ordersService.closeOrderById(parkingBoyId, orderId);
+    @PatchMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
+    public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId,@RequestBody Orders orders) throws NotFoundException {
+        return ordersService.closeOrderById(parkingBoyId, orders);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/order",produces = APPLICATION_JSON_VALUE)
+    public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPosition(@RequestBody Orders orders) throws NotFoundException {
+        return ordersService.getOrderByParkingLotIdAndParkingBlockPosition(orders);
+    }
+
 }

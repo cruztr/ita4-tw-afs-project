@@ -13,7 +13,6 @@ public class Orders {
     private Long parkingLotId;
     private Integer parkingBlockPosition;
 
-//    private Long reservationNumber;
     @OneToOne(cascade = CascadeType.ALL)
     private Reservation reservation;
     private String plateNumber;
@@ -66,14 +65,6 @@ public class Orders {
     public void setStatus(String status) {
         this.status = status;
     }
-
-//    public Long getReservationNumber() {
-//        return reservationNumber;
-//    }
-//
-//    public void setReservationNumber(Long reservationNumber) {
-//        this.reservationNumber = reservationNumber;
-//    }
 
     public Optional<Reservation> getReservation() {
         return Optional.ofNullable(reservation);
