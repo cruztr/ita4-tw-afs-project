@@ -160,4 +160,12 @@ public class OrdersService {
     public Optional<Orders> getOrderByParkingLotIdAndParkingBlockPositionAndStatus(Orders orders) {
         return ordersRepository.findByParkingBlockPositionAndParkingLotIdAndStatus(orders.getParkingBlockPosition(), orders.getParkingLotId(), "OPEN");
     }
+
+    public List<Orders> getCreatedOrdersByParkingBoyId(Long parkingBoyId) {
+        return ordersRepository.getOrdersByCreatedBy(parkingBoyId);
+    }
+
+    public List<Orders> getClosedOrdersByParkingBoyId(Long parkingBoyId) {
+        return ordersRepository.getOrdersByClosedBy(parkingBoyId);
+    }
 }

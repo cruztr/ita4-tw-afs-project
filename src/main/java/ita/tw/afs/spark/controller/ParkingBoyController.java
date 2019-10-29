@@ -3,6 +3,7 @@ package ita.tw.afs.spark.controller;
 import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.ParkingBoy;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.ParkingBoyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,5 +37,10 @@ public class ParkingBoyController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<ReservationResponse> getReservations() {
         return parkingBoyService.getReservations();
+    }
+
+    @GetMapping(value = "/getPendingReservations", produces = {"application/json"})
+    public List<Reservation> getPendingReservations() {
+        return parkingBoyService.getPendingReservations();
     }
 }

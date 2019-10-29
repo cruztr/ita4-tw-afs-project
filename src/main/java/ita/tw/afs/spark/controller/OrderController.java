@@ -71,4 +71,15 @@ public class OrderController {
         return ordersService.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orders);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/{parkingBoyId}/getAllCreatedOrders",produces = APPLICATION_JSON_VALUE)
+    public List<Orders> getCreatedOrdersByParkingBoyId(@PathVariable Long parkingBoyId) throws NotFoundException {
+        return ordersService.getCreatedOrdersByParkingBoyId(parkingBoyId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/{parkingBoyId}/getAllClosedOrders",produces = APPLICATION_JSON_VALUE)
+    public List<Orders> getClosedOrdersByParkingBoyId(@PathVariable Long parkingBoyId) throws NotFoundException {
+        return ordersService.getClosedOrdersByParkingBoyId(parkingBoyId);
+    }
 }
