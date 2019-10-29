@@ -52,8 +52,8 @@ public class ParkingBlockService {
         parkingBlockRepository.save(parkingBlock);
     }
 
-    public ParkingBlock findByParkingLotIdAndPosition(Long parkingLotId, Integer position) {
-        return parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, position );
+    public ParkingBlock findByParkingLotIdAndPositionAndStatus(Long parkingLotId, Integer position,String status) {
+        return parkingBlockRepository.findByParkingLotIdAndPositionAndStatus(parkingLotId, position ,status);
     }
 
     public void save(ParkingBlock reservedParkingBlock) {

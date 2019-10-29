@@ -1,6 +1,6 @@
 package ita.tw.afs.spark.controller;
 
-import ita.tw.afs.spark.dto.ParkingLotResponse;
+import ita.tw.afs.spark.dto.MyReservationResponse;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -58,5 +59,11 @@ public class CarOwnerController {
     public CarOwner signUp(@RequestBody CarOwner carOwner) throws ExistingCredentialException {
         CarOwner finalCarOwner = carOwnerService.signUp(carOwner);
         return finalCarOwner;
+    }
+
+    @GetMapping(value = "/{carOwnerId}", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public MyReservationResponse getMyReservation(@PathVariable Long carOwnerId) throws NotFoundException {
+        return carOwnerService.getReservation(carOwnerId);
     }
 }
