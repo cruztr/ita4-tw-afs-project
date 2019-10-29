@@ -43,4 +43,9 @@ public class ParkingBoyController {
     public List<Reservation> getPendingReservations() {
         return parkingBoyService.getPendingReservations();
     }
+
+    @GetMapping(value = "/{parkingBoyId}", produces = {"application/json"})
+    public ParkingBoy get(@PathVariable Long parkingBoyId) {
+        return parkingBoyService.getParkingBoyById(parkingBoyId);
+    }
 }

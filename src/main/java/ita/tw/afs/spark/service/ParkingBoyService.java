@@ -60,4 +60,8 @@ public class ParkingBoyService {
     public List<Reservation> getPendingReservations() {
         return reservationRepository.getReservationsByStatus("RESERVED");
     }
+
+    public ParkingBoy getParkingBoyById(Long parkingBoyId) {
+        return parkingBoyRepository.findParkingBoyById(parkingBoyId);
+    }
 }
