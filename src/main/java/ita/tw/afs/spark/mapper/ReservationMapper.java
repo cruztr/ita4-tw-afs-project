@@ -6,22 +6,27 @@ import ita.tw.afs.spark.model.Reservation;
 
 public class ReservationMapper {
     private final Reservation reservation;
+    private final CarOwner carOwner;
 
-    public ReservationMapper(Reservation reservation){
+    public ReservationMapper(Reservation reservation, CarOwner carOwner){
         this.reservation = reservation;
+        this.carOwner = carOwner;
     }
 
     public ReservationResponse mappedResponse(){
         ReservationResponse reservationResponse = new ReservationResponse();
-        String firstName = reservation.getCarOwner().getFirstName();
-        String lastName = reservation.getCarOwner().getLastName();
+        String firstName = carOwner.getFirstName();
+        String lastName = carOwner.getLastName();
 
         reservationResponse.setFullName(firstName + " " + lastName);
-        reservationResponse.setPlateNumber(reservation.getCarOwner().getPlateNumber());
+        reservationResponse.setParkingLotId(reservation.getParkingLotId());
+        reservationResponse.setCarOwnerId(reservation.getCarOwnerId());
+        reservationResponse.setPlateNumber(carOwner.getPlateNumber());
         reservationResponse.setReservedTime(reservation.getReservedTime());
         reservationResponse.setApplicationTime(reservation.getApplicationTime());
         reservationResponse.setStatus(reservation.getStatus());
         reservationResponse.setReservationNumber(reservation.getReservationNumber());
+        reservationResponse.setPosition(reservation.getPosition());
         reservationResponse.setKey(reservation.getReservationNumber());
         return reservationResponse;
     }

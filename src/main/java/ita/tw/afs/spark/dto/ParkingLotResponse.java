@@ -1,42 +1,18 @@
-package ita.tw.afs.spark.model;
+package ita.tw.afs.spark.dto;
 
-import org.hibernate.annotations.Cascade;
+import ita.tw.afs.spark.model.ParkingBlock;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-public class ParkingLot {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ParkingLotResponse {
     private Long id;
-
     private String name;
     private String location;
     private Integer capacity;
-
-    @OneToMany(cascade = CascadeType.ALL)
     private List<ParkingBlock> parkingBlocks;
-
-    public List<ParkingBlock> getParkingBlocks() {
-        return parkingBlocks;
-    }
-
-    public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
-        this.parkingBlocks = parkingBlocks;
-    }
-
     private Double rate;
-
-    public ParkingLot() {
-    }
-
-    public ParkingLot(Long id, String name, Integer capacity) {
-        this.id = id;
-        this.name = name;
-        this.capacity = capacity;
-    }
+    private Long key;
+    private String status;
 
     public Long getId() {
         return id;
@@ -76,5 +52,25 @@ public class ParkingLot {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public Long getKey() {
+        return key;
+    }
+
+    public void setKey(Long key) {
+        this.key = key;
+    }
+    public List<ParkingBlock> getParkingBlocks() { return parkingBlocks; }
+    public void setParkingBlocks(List<ParkingBlock> parkingBlocks) {
+        this.parkingBlocks = parkingBlocks;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

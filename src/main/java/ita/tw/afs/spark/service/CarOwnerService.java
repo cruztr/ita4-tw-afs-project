@@ -3,30 +3,62 @@ package ita.tw.afs.spark.service;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
+import ita.tw.afs.spark.model.ParkingBlock;
+import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CarOwnerService {
 
     public static final String RESERVED = "RESERVED";
+    public static final String AVAILABLE = "AVAILABLE";
+
     @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
     private CarOwnerRepository carOwnerRepository;
 
-    public Reservation createReservation(Reservation reservation) {
-        Date date = new Date();
+    @Autowired
+    private ParkingLotService parkingLotService;
+
+    @Autowired
+    private ParkingBlockService parkingBlockService;
+
+    public Reservation createReservation(Reservation reservation, Long parkingLotId)
+            throws NotFoundException {
+
+
+        Optional<ParkingLot> parkingLotOptional = parkingLotService.getParkingLot(parkingLotId);
         reservation.setStatus(RESERVED);
-        reservation.setApplicationTime(date.toString());
+        reservation.setApplicationTime(getCurrentDateTime());
+        reservation.setParkingLotId(parkingLotId);
+
+        List<ParkingBlock> parkingBlockList = parkingLotOptional.get().getParkingBlocks();
+        Integer parkingBlockPosition = getLastAvailableParkingBlock(parkingBlockList);
+        reservation.setPosition(parkingBlockPosition);
+        parkingBlockService.updateParkingBlockStatusToReserved(parkingLotId, parkingBlockPosition);
 
         return reservationRepository.save(reservation);
+
+    }
+
+    private Integer getLastAvailableParkingBlock(List<ParkingBlock> parkingBlockList) {
+        return parkingBlockList.stream()
+                .filter(parkingBlock -> (parkingBlock.getStatus().equals(AVAILABLE)))
+                .map(parkingBlock -> parkingBlock.getPosition()).sorted()
+                .reduce((x,y) -> y).orElse(0);
     }
 
     public CarOwner login(String username, String password) throws InvalidCredentialsException {
@@ -43,5 +75,11 @@ public class CarOwnerService {
             return carOwnerRepository.save(carOwner);
         }
         throw new ExistingCredentialException("Username or Password is existing");
+    }
+
+    private String getCurrentDateTime() {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return myDateObj.format(myFormatObj);
     }
 }

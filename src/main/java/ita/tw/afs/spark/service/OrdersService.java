@@ -50,7 +50,7 @@ public class OrdersService {
             Optional<ParkingLot> parkingLot = parkingLotRepository.findById(order.getParkingLotId());
             if (parkingLot.isPresent()) {
                 Boolean isParkingBlockValid = parkingLotService.checkIfParkingBlockPositionIsValid(order.getParkingLotId(),
-                        order.getParkingBlockPosition());
+                        order.getParkingBlockPosition(), order.getReservation());
                 if(isParkingBlockValid){
                     if(order.getReservation().isPresent()){
                         Long reservationNumber = order.getReservation().get().getReservationNumber();

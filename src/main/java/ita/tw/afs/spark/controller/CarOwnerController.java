@@ -5,6 +5,7 @@ import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.CarOwnerService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,11 @@ public class CarOwnerController {
     @Autowired
     private CarOwnerService carOwnerService;
 
-    @PostMapping(produces = {"application/json"})
+    @PostMapping(value = "parkingLot/{parkingLotId}", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        return carOwnerService.createReservation(reservation);
+    public Reservation createReservation(@RequestBody Reservation reservation,
+                                         @PathVariable Long parkingLotId) throws NotFoundException {
+        return carOwnerService.createReservation(reservation, parkingLotId);
     }
 
     @PostMapping(value = "/login", produces = {"application/json"})
