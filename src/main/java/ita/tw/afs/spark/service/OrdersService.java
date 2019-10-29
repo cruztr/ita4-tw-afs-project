@@ -1,6 +1,8 @@
 package ita.tw.afs.spark.service;
 
 
+import ita.tw.afs.spark.dto.OrdersResponse;
+import ita.tw.afs.spark.mapper.OrdersMapper;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,8 +82,18 @@ public class OrdersService {
         return ordersRepository.save(orders);
     }
 
-    public Iterable<Orders> getOrdersByPage() {
-        return ordersRepository.findAll();
+    public List<OrdersResponse> getOrders() {
+        OrdersMapper mapper = new OrdersMapper();
+        List<OrdersResponse> mappedResponse = new ArrayList<>();
+        ordersRepository.findByStatus("OPEN").forEach(order -> {
+            HashMap<String, Object> keyValue = new HashMap<>();
+            keyValue.put("Order", order);
+            Optional<ParkingLot> parkingLot = parkingLotRepository.findById(order.getParkingLotId());
+            keyValue.put("ParkingLot", parkingLot.get());
+            mappedResponse.add(mapper.mappedResponse(keyValue));
+        });
+
+        return mappedResponse;
     }
 
     public Optional<Orders> getOrderById(Long orderId) throws NotFoundException {
@@ -90,7 +105,7 @@ public class OrdersService {
     }
 
     public Optional<Orders> closeOrderById(Long parkingBoyId, Orders orderId) throws NotFoundException {
-        Optional<Orders> orders = ordersRepository.findByParkingBlockPositionAndParkingLotId(orderId.getParkingBlockPosition(), orderId.getParkingLotId());
+        Optional<Orders> orders = ordersRepository.findByParkingBlockPositionAndParkingLotIdAndStatus(orderId.getParkingBlockPosition(), orderId.getParkingLotId(), "OPEN");
 
         if(orders.isPresent()){
             if(orders.get().getTimeOut() == null ||
