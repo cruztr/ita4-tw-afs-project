@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ParkingBlockRepository extends JpaRepository<ParkingBlock, Long> {
     ParkingBlock findByParkingLotIdAndPosition(Long parkingLotId, Integer parkingBlockPosition);
+
+    ParkingBlock findByParkingLotIdAndPositionAndStatus(Long parkingLotId, Integer parkingBlockPosition, String status);
 }

@@ -1,7 +1,11 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.dto.MyReservationResponse;
+import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
+import ita.tw.afs.spark.mapper.MyReservationMapper;
+import ita.tw.afs.spark.mapper.ReservationMapper;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
@@ -21,8 +25,8 @@ import java.util.Optional;
 @Service
 public class CarOwnerService {
 
-    public static final String RESERVED = "RESERVED";
-    public static final String AVAILABLE = "AVAILABLE";
+    private static final String RESERVED = "RESERVED";
+    private static final String AVAILABLE = "AVAILABLE";
     private static final String CANCELLED = "CANCELLED";
 
     @Autowired
@@ -55,18 +59,20 @@ public class CarOwnerService {
 
     }
 
-
-    public Optional<Reservation> cancelReservation(Long reservationId) {
+    public Optional<Reservation> cancelReservation(Long reservationId) throws NotFoundException {
         Optional<Reservation> myReservation = reservationRepository.findById(reservationId);
-        ParkingBlock reservedParkingBlock = parkingBlockService.findByParkingLotIdAndPosition(myReservation.get().getParkingLotId(), myReservation.get().getPosition());
+        if(myReservation.isPresent()) {
+            ParkingBlock reservedParkingBlock = parkingBlockService.findByParkingLotIdAndPositionAndStatus(myReservation.get().getParkingLotId(), myReservation.get().getPosition(), "RESERVED");
 
-        if(reservedParkingBlock.getStatus().contains(RESERVED) && myReservation.get().getStatus().contains(RESERVED)) {
-            reservedParkingBlock.setStatus(AVAILABLE);
-            parkingBlockService.save(reservedParkingBlock);
-            myReservation.get().setStatus(CANCELLED);
-            reservationRepository.save(myReservation.get());
+            if (reservedParkingBlock.getStatus().contains(RESERVED) && myReservation.get().getStatus().contains(RESERVED)) {
+                reservedParkingBlock.setStatus(AVAILABLE);
+                parkingBlockService.save(reservedParkingBlock);
+                myReservation.get().setStatus(CANCELLED);
+                reservationRepository.save(myReservation.get());
+            }
+            return myReservation;
         }
-        return myReservation;
+        throw new NotFoundException("Reservation not found");
     }
 
     private Integer getLastAvailableParkingBlock(List<ParkingBlock> parkingBlockList) {
@@ -98,4 +104,12 @@ public class CarOwnerService {
         return myDateObj.format(myFormatObj);
     }
 
+    public MyReservationResponse getReservation(Long carOwnerId) throws NotFoundException {
+        Optional<Reservation> myReservation = reservationRepository.findByCarOwnerIdAndStatus(carOwnerId, "RESERVED");
+        Optional<ParkingLot> parkingLot = parkingLotService.getParkingLot(myReservation.get().getParkingLotId());
+
+        MyReservationMapper reservationMapper = new MyReservationMapper(myReservation,parkingLot);
+
+        return reservationMapper.mappedResponse();
+    }
 }
