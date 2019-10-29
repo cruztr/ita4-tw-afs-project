@@ -25,6 +25,7 @@ public class CarOwnerController {
     public static final String CAR_OWNER = "Car Owner";
     public static final String RESERVATION = "Reservation";
     public static final String CREATE_RESERVATION = "Create_Reservation ";
+    public static final String CANCEL_RESERVATION = "Cancel Reservation ";
 
     @Autowired
     private CarOwnerService carOwnerService;
@@ -47,7 +48,12 @@ public class CarOwnerController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/reservation/{reservationId}", produces = APPLICATION_JSON_VALUE)
     public Optional<Reservation> cancelReservation(@PathVariable Long reservationId) throws NotFoundException {
-        return carOwnerService.cancelReservation(reservationId);
+        Reservation reservation = carOwnerService.cancelReservation(reservationId).get();
+        logsService.createLogs(reservation.getCarOwnerId(),
+                CAR_OWNER, RESERVATION,
+                CANCEL_RESERVATION + reservation.getReservationNumber(),
+                reservation.getApplicationTime());
+        return Optional.of(reservation);
     }
 
     @PostMapping(value = "/login", produces = {"application/json"})
