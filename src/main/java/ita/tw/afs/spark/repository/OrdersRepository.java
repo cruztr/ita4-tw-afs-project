@@ -8,5 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
+
     Optional<Orders> findByParkingBlockPositionAndParkingLotId(Integer parkingBlockPosition, Long parkingLotId);
+
+    Optional<Orders> findByParkingBlockPositionAndParkingLotIdAndStatus(Integer parkingBlockPosition, Long parkingLotId, String open);
+
+    Iterable<Orders> findByStatus(String status);
 }
