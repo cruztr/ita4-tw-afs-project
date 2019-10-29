@@ -49,4 +49,10 @@ public class ParkingLotController {
 
         throw  new NotFoundException(PARKING_LOT_NOT_FOUND);
     }
+
+    @GetMapping(value = "/all", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<ParkingLotResponse> getParkingLotsAvailability(){
+        return parkingLotService.getParkingLotsWithStatus();
+    }
 }

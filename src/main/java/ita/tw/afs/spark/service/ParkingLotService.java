@@ -10,6 +10,7 @@ import ita.tw.afs.spark.repository.ParkingLotRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.security.x509.AVA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,9 @@ public class ParkingLotService {
     private static final String PLEASE_INPUT_A_VALID_RATE = "PLEASE INPUT A VALID RATE";
     private static final String PARKING_BLOCK_NOT_FOUND = "PARKING BLOCK NOT FOUND";
     private static final String PARKING_BLOCK_IS_ALREADY_OCCUPIED = "PARKING BLOCK IS ALREADY OCCUPIED";
-    public static final String AVAILABLE1 = "AVAILABLE";
-    public static final String RESERVED = "RESERVED";
+    private static final String AVAILABLE1 = "AVAILABLE";
+    private static final String RESERVED = "RESERVED";
+    private static final String FULL = "FULL";
 
     @Autowired
     private ParkingLotRepository parkingLotRepo;
@@ -69,7 +71,7 @@ public class ParkingLotService {
 
         for (ParkingLot parkingLot: availableParkingLots) {
             ParkingLotMapper parkingLotMapper = new ParkingLotMapper(parkingLot);
-            parkingLotResponses.add(parkingLotMapper.mappedResponse());
+            parkingLotResponses.add(parkingLotMapper.mappedResponse(null));
         }
         return parkingLotResponses;
     }
@@ -117,5 +119,24 @@ public class ParkingLotService {
         }
 
         throw new NotFoundException(PARKING_BLOCK_NOT_FOUND);
+    }
+
+    public List<ParkingLotResponse> getParkingLotsWithStatus() {
+        List<ParkingLotResponse> parkingLotResponses = new ArrayList<>();
+        List<ParkingLot> parkingLotList = parkingLotRepo.findAll();
+
+        for (ParkingLot parkingLot: parkingLotList) {
+            ParkingLotMapper parkingLotMapper = new ParkingLotMapper(parkingLot);
+            String status = "";
+            for(ParkingBlock parkingBlock : parkingLot.getParkingBlocks()){
+                if(parkingBlock.getStatus().equals(AVAILABLE)) {
+                    status = AVAILABLE;
+                    break;
+                }
+                status = FULL;
+            }
+            parkingLotResponses.add(parkingLotMapper.mappedResponse(status));
+        }
+        return parkingLotResponses;
     }
 }

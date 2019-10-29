@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.ParkingLotResponse;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;

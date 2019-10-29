@@ -9,8 +9,7 @@ public class ParkingLotMapper {
         this.parkingLot = parkingLot;
     }
 
-    public ParkingLotResponse mappedResponse(){
-
+    public ParkingLotResponse mappedResponse(String status){
         ParkingLotResponse parkingLotResponse = new ParkingLotResponse();
         parkingLotResponse.setId(parkingLot.getId());
         parkingLotResponse.setName(parkingLot.getName());
@@ -19,8 +18,7 @@ public class ParkingLotMapper {
         parkingLotResponse.setParkingBlocks(parkingLot.getParkingBlocks());
         parkingLotResponse.setRate(parkingLot.getRate());
         parkingLotResponse.setKey(parkingLot.getId());
+        parkingLotResponse.setStatus(status);
         return parkingLotResponse;
     }
-
-
 }
