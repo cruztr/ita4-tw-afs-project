@@ -7,8 +7,9 @@ import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
+import ita.tw.afs.spark.repository.ParkingLotRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
-import org.assertj.core.api.Assertions;
+import javassist.NotFoundException;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,11 +36,18 @@ class CarOwnerServiceTest {
 
     public static final String RESERVED = "RESERVED";
     public static final String AVAILABLE = "AVAILABLE";
+
+    @MockBean
+    private ReservationRepository reservationRepository;
+
     @MockBean
     private CarOwnerRepository carOwnerRepository;
 
     @MockBean
-    private ReservationRepository reservationRepository;
+    ParkingLotService parkingLotService;
+
+    @MockBean
+    private ParkingBlockService parkingBlockService;
 
     @Autowired
     private CarOwnerService carOwnerService;
@@ -55,9 +64,15 @@ class CarOwnerServiceTest {
         carOwner.setPassword("Amikewashicho");
         carOwner.setUsername("mikeCrophones07");
         carOwner.setPlateNumber("PLT=2734");
+    }
+
+    @Test
+    void should_return_reservation_when_information_is_valid() throws NotFoundException {
+        final Long parkingLotId = (long) 1;
+        final Integer position = 19;
 
         ParkingBlock parkingBlock = new ParkingBlock();
-        parkingBlock.setParkingLotId(1L);
+        parkingBlock.setParkingLotId(parkingLotId);
         parkingBlock.setId(1L);
         parkingBlock.setPosition(1);
         parkingBlock.setStatus(AVAILABLE);
@@ -70,14 +85,12 @@ class CarOwnerServiceTest {
 
         reservation = new Reservation();
         reservation.setStatus(RESERVED);
-        reservation.setParkingLot(parkingLot);
-    }
+        reservation.setParkingLotId(parkingLotId);
 
-    @Test
-    void should_return_reservation_when_information_is_valid() {
+        when(parkingLotService.getParkingLot(parkingLotId)).thenReturn(Optional.of(parkingLot));
         when(reservationRepository.save(anyObject())).thenReturn(reservation);
 
-        Reservation myReservation = carOwnerService.createReservation(reservation);
+        Reservation myReservation = carOwnerService.createReservation(reservation, parkingLotId);
         Assert.assertThat(reservation, is(myReservation));
     }
 

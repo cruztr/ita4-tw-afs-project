@@ -1,12 +1,10 @@
 package ita.tw.afs.spark.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.CarOwnerService;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,12 +16,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
 import static ita.tw.afs.spark.testUtil.TestUtil.asJsonString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyObject;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,10 +52,11 @@ public class CarOwnerControllerTest {
     @Test
     void should_return_status_created_when_create_reservation() throws Exception {
         Reservation reservation = new Reservation();
+        final Long parkingLotId = (long) 1;
 
-        when(carOwnerService.createReservation(reservation)).thenReturn(reservation);
+        when(carOwnerService.createReservation(reservation, parkingLotId)).thenReturn(reservation);
 
-        ResultActions result = mockMvc.perform(post("/spark/carOwner")
+        ResultActions result = mockMvc.perform(post("/spark/carOwner/parkingLot/{parkingLotId}",parkingLotId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(reservation)));
         result.andExpect(status().isCreated());

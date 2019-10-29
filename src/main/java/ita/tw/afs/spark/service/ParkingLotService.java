@@ -1,5 +1,7 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.dto.ParkingLotResponse;
+import ita.tw.afs.spark.mapper.ParkingLotMapper;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
@@ -56,11 +58,18 @@ public class ParkingLotService {
         return parkingLotRepo.findAll();
     }
 
-    public List<ParkingLot> getAvailableParkingLots() {
+    public List<ParkingLotResponse> getAvailableParkingLots() {
+        List<ParkingLotResponse> parkingLotResponses = new ArrayList<>();
+
         List<ParkingLot> availableParkingLots = parkingLotRepo.findAll()
                 .stream().filter(parkingLot -> parkingLotHasAvailableSpace(parkingLot))
                 .collect(Collectors.toList());
-        return availableParkingLots;
+
+        for (ParkingLot parkingLot: availableParkingLots) {
+            ParkingLotMapper parkingLotMapper = new ParkingLotMapper(parkingLot);
+            parkingLotResponses.add(parkingLotMapper.mappedResponse());
+        }
+        return parkingLotResponses;
     }
 
     private Boolean parkingLotHasAvailableSpace(ParkingLot parkingLot){

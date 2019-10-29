@@ -1,6 +1,9 @@
 package ita.tw.afs.spark.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Reservation {
@@ -11,13 +14,8 @@ public class Reservation {
     private String status;
     private String applicationTime;
     private String reservedTime;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private CarOwner carOwner;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    ParkingLot parkingLot;
-
+    private Long parkingLotId;
+    private Long carOwnerId;
     private Integer position;
 
     public Long getReservationNumber() {
@@ -52,27 +50,27 @@ public class Reservation {
         this.reservedTime = reservedTime;
     }
 
-    public CarOwner getCarOwner() {
-        return carOwner;
-    }
-
-    public void setCarOwner(CarOwner carOwner) {
-        this.carOwner = carOwner;
-    }
-
-    public ParkingLot getParkingLot() {
-        return parkingLot;
-    }
-
-    public void setParkingLot(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
-    }
-
     public Integer getPosition() {
         return position;
     }
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+    public Long getCarOwnerId() {
+        return carOwnerId;
+    }
+
+    public void setCarOwnerId(Long carOwnerId) {
+        this.carOwnerId = carOwnerId;
     }
 }

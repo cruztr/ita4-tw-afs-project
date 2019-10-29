@@ -3,21 +3,28 @@ package ita.tw.afs.spark.mapper;
 import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
+import ita.tw.afs.spark.repository.CarOwnerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReservationMapper {
     private final Reservation reservation;
+
+    @Autowired
+    private CarOwnerRepository carOwnerRepository;
 
     public ReservationMapper(Reservation reservation){
         this.reservation = reservation;
     }
 
     public ReservationResponse mappedResponse(){
+        CarOwner carOwner = carOwnerRepository.findById(reservation.getCarOwnerId()).get();
+
         ReservationResponse reservationResponse = new ReservationResponse();
-        String firstName = reservation.getCarOwner().getFirstName();
-        String lastName = reservation.getCarOwner().getLastName();
+        String firstName = carOwner.getFirstName();
+        String lastName = carOwner.getLastName();
 
         reservationResponse.setFullName(firstName + " " + lastName);
-        reservationResponse.setPlateNumber(reservation.getCarOwner().getPlateNumber());
+        reservationResponse.setPlateNumber(carOwner.getPlateNumber());
         reservationResponse.setReservedTime(reservation.getReservedTime());
         reservationResponse.setApplicationTime(reservation.getApplicationTime());
         reservationResponse.setStatus(reservation.getStatus());
