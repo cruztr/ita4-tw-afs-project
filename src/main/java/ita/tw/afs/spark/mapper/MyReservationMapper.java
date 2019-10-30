@@ -27,6 +27,7 @@ public class MyReservationMapper {
         reservationResponse.setReservationStatus(reservation.get().getStatus());
         reservationResponse.setReservedTime(reservation.get().getReservedTime());
         reservationResponse.setParkingBlockPosition(reservation.get().getPosition());
+        reservationResponse.setRate(parkingLot.get().getRate());
 
         return reservationResponse;
     }

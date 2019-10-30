@@ -9,6 +9,15 @@ public class MyReservationResponse {
     private String parkingLotLocation;
     private String reservedTime;
     private String reservationStatus;
+    private Double rate;
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
 
     public Integer getParkingBlockPosition() {
         return parkingBlockPosition;
