@@ -78,4 +78,10 @@ public class CarOwnerController {
     public MyReservationResponse getMyReservation(@PathVariable Long carOwnerId) throws NotFoundException {
         return carOwnerService.getReservation(carOwnerId);
     }
+
+    @GetMapping(value = "getById/{id}", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public CarOwner get(@PathVariable Long id) throws NotFoundException {
+        return carOwnerService.getCarOwnerById(id);
+    }
 }

@@ -13,7 +13,6 @@ import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -125,5 +124,9 @@ public class CarOwnerService {
         MyReservationMapper reservationMapper = new MyReservationMapper(myReservation,parkingLot);
 
         return reservationMapper.mappedResponse();
+    }
+
+    public CarOwner getCarOwnerById(Long id) {
+        return carOwnerRepository.findCarOwnerById(id);
     }
 }
