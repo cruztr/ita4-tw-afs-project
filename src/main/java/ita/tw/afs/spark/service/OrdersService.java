@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -94,6 +96,12 @@ public class OrdersService {
             keyValue.put("Order", order);
             Optional<ParkingLot> parkingLot = parkingLotRepository.findById(order.getParkingLotId());
             keyValue.put("ParkingLot", parkingLot.get());
+
+            Double price = computeOrderPrice(order.getTimeIn(),
+                    getCurrentDateTime(), order.getParkingLotId());
+
+            BigDecimal bd = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
+            keyValue.put("Cost", bd.doubleValue());
             mappedResponse.add(mapper.mappedResponse(keyValue));
         });
 
@@ -106,8 +114,9 @@ public class OrdersService {
             if(!ordersOptional.get().getStatus().equals(CLOSED)){
                 Double price = computeOrderPrice(ordersOptional.get().getTimeIn(),
                         getCurrentDateTime(), ordersOptional.get().getParkingLotId());
+                BigDecimal bd = new BigDecimal(price).setScale(3, RoundingMode.HALF_UP);
                 ordersOptional.get().setTimeOut(N_A);
-                ordersOptional.get().setPrice(price);
+                ordersOptional.get().setPrice(bd.doubleValue());
             }
             return ordersOptional;
         }

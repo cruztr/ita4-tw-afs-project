@@ -9,6 +9,7 @@ public class OrdersResponse {
     private Integer parkingBlockPosition;
     private String price;
     private String timeIn;
+    private Double cost;
 
     public Long getOrderNumber() {
         return orderNumber;
@@ -64,6 +65,14 @@ public class OrdersResponse {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
     }
 
     public String getTimeIn() {

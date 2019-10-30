@@ -10,6 +10,7 @@ public class OrdersMapper {
     public OrdersResponse mappedResponse(HashMap<String, Object> keyValue) {
         Orders order = (Orders) keyValue.get("Order");
         ParkingLot parkingLot = (ParkingLot) keyValue.get("ParkingLot");
+        Double cost = (Double) keyValue.get("Cost");
 
         OrdersResponse ordersResponse = new OrdersResponse();
         ordersResponse.setOrderNumber(order.getOrderId());
@@ -18,7 +19,8 @@ public class OrdersMapper {
         ordersResponse.setParkingLotId(parkingLot.getId());
         ordersResponse.setParkingBlockPosition(order.getParkingBlockPosition());
         ordersResponse.setPlateNumber(order.getPlateNumber());
-        ordersResponse.setPrice(String.valueOf(order.getPrice()));
+        ordersResponse.setPrice(String.valueOf(parkingLot.getRate()));
+        ordersResponse.setCost(cost);
         ordersResponse.setTimeIn(order.getTimeIn());
         return ordersResponse;
     }
