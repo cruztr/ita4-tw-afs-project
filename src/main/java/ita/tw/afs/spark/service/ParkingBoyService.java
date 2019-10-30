@@ -56,4 +56,12 @@ public class ParkingBoyService {
         Optional<CarOwner> fetchedCarOwner = carOwnerRepository.findById(id);
         return fetchedCarOwner.get();
     }
+
+    public List<Reservation> getPendingReservations() {
+        return reservationRepository.getReservationsByStatus("RESERVED");
+    }
+
+    public ParkingBoy getParkingBoyById(Long parkingBoyId) {
+        return parkingBoyRepository.findParkingBoyById(parkingBoyId);
+    }
 }

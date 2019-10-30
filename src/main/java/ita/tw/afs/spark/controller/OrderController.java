@@ -1,5 +1,9 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.GeneralResponse;
+import ita.tw.afs.spark.dto.OrdersResponse;
+import ita.tw.afs.spark.dto.TypeValuePair;
+import ita.tw.afs.spark.exception.GeneralException;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.service.LogsService;
 import ita.tw.afs.spark.service.OrdersService;
@@ -9,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.NotSupportedException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -40,9 +45,8 @@ public class OrderController {
     }
 
     @GetMapping(value = "/orders", produces = APPLICATION_JSON_VALUE)
-    public Iterable<Orders> listOrders(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                       @RequestParam(required = false, defaultValue = "10") Integer size) {
-        return ordersService.getOrdersByPage();
+    public List<OrdersResponse> listOrders(){
+        return ordersService.getOrders();
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -53,7 +57,7 @@ public class OrderController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(value = "/{parkingBoyId}/orders", produces = APPLICATION_JSON_VALUE)
-    public Optional<Orders> closeOrder(@PathVariable Long parkingBoyId,@RequestBody Orders orders) throws NotFoundException {
+    public GeneralResponse closeOrder(@PathVariable Long parkingBoyId, @RequestBody Orders orders) throws NotFoundException, GeneralException {
         logsService.createLogs(parkingBoyId,
                 PARKING_BOY, ORDER,
                 CLOSE_ORDER + orders.getOrderId(),
@@ -67,4 +71,15 @@ public class OrderController {
         return ordersService.getOrderByParkingLotIdAndParkingBlockPositionAndStatus(orders);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/{parkingBoyId}/getAllCreatedOrders",produces = APPLICATION_JSON_VALUE)
+    public List<Orders> getCreatedOrdersByParkingBoyId(@PathVariable Long parkingBoyId) throws NotFoundException {
+        return ordersService.getCreatedOrdersByParkingBoyId(parkingBoyId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/{parkingBoyId}/getAllClosedOrders",produces = APPLICATION_JSON_VALUE)
+    public List<Orders> getClosedOrdersByParkingBoyId(@PathVariable Long parkingBoyId) throws NotFoundException {
+        return ordersService.getClosedOrdersByParkingBoyId(parkingBoyId);
+    }
 }
