@@ -2,20 +2,17 @@ package ita.tw.afs.spark.service;
 
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
+import ita.tw.afs.spark.mapper.MyReservationMapper;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.CarOwnerRepository;
-import ita.tw.afs.spark.repository.ParkingLotRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,10 +20,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,27 +60,40 @@ class CarOwnerServiceTest {
 
     private ParkingBlock parkingBlock;
 
+    private ParkingLot parkingLot;
+
     private Long parkingLotId;
 
     @BeforeEach
     public void setUp(){
         parkingLotId =  1L;
         carOwner = new CarOwner();
+        carOwner.setId(2L);
         carOwner.setFirstName("Mike");
         carOwner.setLastName("Echon");
         carOwner.setPassword("Amikewashicho");
         carOwner.setUsername("mikeCrophones07");
         carOwner.setPlateNumber("PLT=2734");
+
         reservation = new Reservation();
         reservation.setStatus(RESERVED);
         reservation.setReservationNumber(1L);
         reservation.setParkingLotId(parkingLotId);
         reservation.setPosition(1);
+
         parkingBlock = new ParkingBlock();
         parkingBlock.setParkingLotId(parkingLotId);
         parkingBlock.setId(1L);
         parkingBlock.setPosition(1);
         parkingBlock.setStatus(AVAILABLE);
+
+        parkingLot = new ParkingLot();
+        parkingLot.setId(parkingLotId);
+        parkingLot.setName("ParkingLot1");
+        parkingLot.setParkingBlocks(Collections.singletonList(parkingBlock));
+        parkingLot.setRate(15.00);
+        parkingLot.setLocation("MNL");
+        parkingLot.setCapacity(3);
     }
 
     @Test
@@ -115,6 +125,21 @@ class CarOwnerServiceTest {
         when(reservationRepository.save(reservation)).thenReturn(reservation);
 
         assertThat(carOwnerService.cancelReservation(reservation.getReservationNumber()), is(reservationOptional));
+    }
+
+    @Test
+    void should_not_cancel_reservation_when_information_is_null() throws NotFoundException {
+        parkingBlock.setStatus(RESERVED);
+        reservation.setStatus(RESERVED);
+        Optional<Reservation> reservationOptional = Optional.of(reservation);
+        when(reservationRepository.findById(anyLong())).thenReturn(reservationOptional);
+        when(parkingBlockService.findByParkingLotIdAndPositionAndStatus(anyLong(), anyInt(), anyString()))
+                .thenReturn(parkingBlock);
+        parkingBlockService.save(parkingBlock);
+        doNothing().when(parkingBlockService).save(parkingBlock);
+        when(reservationRepository.save(reservation)).thenReturn(reservation);
+        assertThrows(NotFoundException.class,
+                () -> carOwnerService.cancelReservation(null));
     }
     @Test
     void should_return_carOwner_when_correct_credentials_is_passed() throws InvalidCredentialsException {
@@ -173,5 +198,26 @@ class CarOwnerServiceTest {
                 () -> carOwnerService.signUp(carOwner));
     }
 
+    @Test
+    void should_get_reservation_by_id() throws NotFoundException {
+        Long carOwnerId = 3L;
+        Optional<Reservation> reservationOptional = Optional.of(reservation);
+        Optional<ParkingLot> parkingLotOptional = Optional.of(parkingLot);
+        when(reservationRepository.findByCarOwnerIdAndStatus(carOwnerId, RESERVED))
+                .thenReturn(reservationOptional);
+        when(parkingLotService.getParkingLot(reservationOptional.get().getParkingLotId()))
+                .thenReturn(parkingLotOptional);
+        MyReservationMapper myReservationMapper = new MyReservationMapper(reservationOptional,
+                parkingLotOptional);
 
+        assertThat(carOwnerService.getReservation(carOwnerId).getParkingLotId(),
+                is(myReservationMapper.mappedResponse().getParkingLotId()));
+    }
+
+    @Test
+    void should_get_car_owner_by_id(){
+        Long carOwnerId = 2L;
+        when(carOwnerRepository.findCarOwnerById(carOwnerId)).thenReturn(carOwner);
+        assertThat(carOwnerService.getCarOwnerById(carOwnerId), is(carOwner));
+    }
 }

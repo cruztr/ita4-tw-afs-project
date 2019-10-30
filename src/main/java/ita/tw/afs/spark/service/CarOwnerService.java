@@ -1,11 +1,9 @@
 package ita.tw.afs.spark.service;
 
 import ita.tw.afs.spark.dto.MyReservationResponse;
-import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.ExistingCredentialException;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.mapper.MyReservationMapper;
-import ita.tw.afs.spark.mapper.ReservationMapper;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
@@ -16,7 +14,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.NotSupportedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
