@@ -8,6 +8,12 @@ public class ReservationResponse {
     private String reservedTime;
     private String fullName;
     private String plateNumber;
+    private Long parkingLotId;
+    private Long carOwnerId;
+    private Integer position;
+    private String parkingLotName;
+    private String parkingLotLocation;
+    private Double rate;
 
     public Long getReservationNumber() {
         return reservationNumber;
@@ -63,5 +69,53 @@ public class ReservationResponse {
 
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
+    }
+
+    public Long getParkingLotId() {
+        return parkingLotId;
+    }
+
+    public void setParkingLotId(Long parkingLotId) {
+        this.parkingLotId = parkingLotId;
+    }
+
+    public Long getCarOwnerId() {
+        return carOwnerId;
+    }
+
+    public void setCarOwnerId(Long carOwnerId) {
+        this.carOwnerId = carOwnerId;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public String getParkingLotName() {
+        return parkingLotName;
+    }
+
+    public void setParkingLotName(String parkingLotName) {
+        this.parkingLotName = parkingLotName;
+    }
+
+    public String getParkingLotLocation() {
+        return parkingLotLocation;
+    }
+
+    public void setParkingLotLocation(String parkingLotLocation) {
+        this.parkingLotLocation = parkingLotLocation;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
     }
 }

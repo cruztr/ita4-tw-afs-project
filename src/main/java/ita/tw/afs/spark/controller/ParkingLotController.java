@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.controller;
 
+import ita.tw.afs.spark.dto.ParkingLotResponse;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.service.ParkingLotService;
 import javassist.NotFoundException;
@@ -32,6 +33,12 @@ public class ParkingLotController {
         return parkingLotService.getAll();
     }
 
+    @GetMapping(path = "/available", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<ParkingLotResponse> getAvailableParkingLots(){
+        return parkingLotService.getAvailableParkingLots();
+    }
+
     @GetMapping(value = "/{id}", produces = {"application/json"})
     @ResponseStatus(value = HttpStatus.OK)
     public ParkingLot getParkingLot(@PathVariable Long id) throws NotFoundException {
@@ -41,5 +48,11 @@ public class ParkingLotController {
             return parkingLotOptional.get();
 
         throw  new NotFoundException(PARKING_LOT_NOT_FOUND);
+    }
+
+    @GetMapping(value = "/all", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<ParkingLotResponse> getParkingLotsAvailability(){
+        return parkingLotService.getParkingLotsWithStatus();
     }
 }

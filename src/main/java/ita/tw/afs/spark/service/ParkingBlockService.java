@@ -15,6 +15,7 @@ public class ParkingBlockService {
     private static final String OCCUPIED = "OCCUPIED";
     private static final String PARKING_LOT_NOT_FOUND = "Parking Lot Not Found";
     private static final String AVAILABLE = "AVAILABLE";
+    private static final String RESERVED = "RESERVED";
     @Autowired
     private ParkingBlockRepository parkingBlockRepository;
     @Autowired
@@ -42,5 +43,20 @@ public class ParkingBlockService {
                 parkingBlockPosition);
         parkingBlock.setStatus(AVAILABLE);
         parkingBlockRepository.save(parkingBlock);
+    }
+
+    public void updateParkingBlockStatusToReserved(Long parkingLotId, Integer parkingBlockPosition){
+        ParkingBlock parkingBlock = parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId,
+                parkingBlockPosition);
+        parkingBlock.setStatus(RESERVED);
+        parkingBlockRepository.save(parkingBlock);
+    }
+
+    public ParkingBlock findByParkingLotIdAndPositionAndStatus(Long parkingLotId, Integer position,String status) {
+        return parkingBlockRepository.findByParkingLotIdAndPositionAndStatus(parkingLotId, position ,status);
+    }
+
+    public void save(ParkingBlock reservedParkingBlock) {
+        parkingBlockRepository.save(reservedParkingBlock);
     }
 }

@@ -8,14 +8,17 @@ public class CarOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(unique = true)
     private String username;
+
     private String password;
     private String plateNumber;
     private String firstName;
     private String lastName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "carOwner")
-    private List<Reservation> reservation;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Reservation reservation;
 
     public Long getId() {
         return id;
@@ -65,7 +68,7 @@ public class CarOwner {
         this.lastName = lastName;
     }
 
-    public void setReservation(List<Reservation> reservation) {
+    public void setReservation(Reservation reservation) {
         this.reservation = reservation;
     }
 }

@@ -1,5 +1,6 @@
 package ita.tw.afs.spark.service;
 
+import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.model.ParkingBlock;
 import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -40,20 +42,28 @@ class ParkingLotServiceTest {
     private ParkingLot parkingLot;
     private List<ParkingLot> parkingLotList;
     private ParkingBlock parkingBlock;
+    private Optional<Orders> order;
 
     @BeforeEach
     void setUp() {
+        List<ParkingBlock> parkingBlockList = new ArrayList<>();
         parkingLotList = new ArrayList<>();
         parkingLot = new ParkingLot(1L, "ParkingLot1", 3);
         parkingLot.setRate(10.00);
         parkingLot.setLocation("Mnl");
-        parkingLotList.add(parkingLot);
+
 
         parkingBlock = new ParkingBlock();
         parkingBlock.setId(1L);
         parkingBlock.setStatus("AVAILABLE");
         parkingBlock.setParkingLotId(1L);
         parkingBlock.setPosition(15);
+
+        parkingBlockList.add(parkingBlock);
+        parkingLot.setParkingBlocks(parkingBlockList);
+
+        parkingLotList.add(parkingLot);
+        order = Optional.of(new Orders());
     }
 
     @Test
@@ -120,12 +130,14 @@ class ParkingLotServiceTest {
 
     @Test
     void should_return_true_if_parking_block_status_is_available() throws NotFoundException {
+
+
         Long parkingLotId = 2L;
         Integer parkingBlockPosition = 3;
         when(parkingBlockRepository.findByParkingLotIdAndPosition(parkingLotId, parkingBlockPosition))
                 .thenReturn(parkingBlock);
 
-        assertTrue(parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition));
+        assertTrue(parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition, order.get().getReservation()));
     }
 
     @Test
@@ -137,7 +149,7 @@ class ParkingLotServiceTest {
                 .thenReturn(parkingBlock);
 
         assertThrows(NotFoundException.class, () -> {
-            parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition);
+            parkingLotService.checkIfParkingBlockPositionIsValid(parkingLotId, parkingBlockPosition, order.get().getReservation());
         });
     }
 
@@ -150,7 +162,14 @@ class ParkingLotServiceTest {
                 .thenReturn(parkingBlock);
 
         assertThrows(NotFoundException.class, () -> {
-            parkingLotService.checkIfParkingBlockPositionIsValid(3L, parkingBlockPosition);
+            parkingLotService.checkIfParkingBlockPositionIsValid(3L, parkingBlockPosition, order.get().getReservation());
         });
     }
+
+//    @Test
+//    void should_get_all_parking_lot_with_available_parking_block_space() {
+//        when(parkingLotRepository.findAll()).thenReturn(parkingLotList);
+//        List<ParkingLot> availableParkingLots = parkingLotService.getAvailableParkingLots();
+//        Assert.assertThat(parkingLotList, is(availableParkingLots));
+//    }
 }

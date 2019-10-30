@@ -2,7 +2,7 @@ package ita.tw.afs.spark.dto;
 
 public class TypeValuePair {
     private String type;
-    private String vale;
+    private String value;
 
     public String getType() {
         return type;
@@ -12,11 +12,11 @@ public class TypeValuePair {
         this.type = type;
     }
 
-    public String getVale() {
-        return vale;
+    public String getValue() {
+        return value;
     }
 
-    public void setVale(String vale) {
-        this.vale = vale;
+    public void setValue(String vale) {
+        this.value = vale;
     }
 }
