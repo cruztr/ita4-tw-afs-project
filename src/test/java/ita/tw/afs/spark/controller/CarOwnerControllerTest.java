@@ -5,6 +5,7 @@ import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.CarOwner;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.CarOwnerService;
+import ita.tw.afs.spark.service.LogsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,9 @@ public class CarOwnerControllerTest {
 
     @MockBean
     private CarOwnerService carOwnerService;
+
+    @MockBean
+    private LogsService logsService;
 
     private CarOwner carOwner;
 

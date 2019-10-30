@@ -3,6 +3,8 @@ package ita.tw.afs.spark.controller;
 import ita.tw.afs.spark.dto.ReservationResponse;
 import ita.tw.afs.spark.exception.InvalidCredentialsException;
 import ita.tw.afs.spark.model.ParkingBoy;
+import ita.tw.afs.spark.repository.ParkingLotRepository;
+import ita.tw.afs.spark.service.LogsService;
 import ita.tw.afs.spark.service.ParkingBoyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,12 @@ class ParkingBoyControllerTest {
 
     @MockBean
     private ParkingBoyService parkingBoyService;
+
+    @MockBean
+    private ParkingLotRepository parkingLotRepository;
+
+    @MockBean
+    private LogsService logsService;
 
     private ParkingBoy parkingBoy;
 

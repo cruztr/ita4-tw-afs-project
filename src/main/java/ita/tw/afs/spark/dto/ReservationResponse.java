@@ -11,6 +11,9 @@ public class ReservationResponse {
     private Long parkingLotId;
     private Long carOwnerId;
     private Integer position;
+    private String parkingLotName;
+    private String parkingLotLocation;
+    private Double rate;
 
     public Long getReservationNumber() {
         return reservationNumber;
@@ -90,5 +93,29 @@ public class ReservationResponse {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public String getParkingLotName() {
+        return parkingLotName;
+    }
+
+    public void setParkingLotName(String parkingLotName) {
+        this.parkingLotName = parkingLotName;
+    }
+
+    public String getParkingLotLocation() {
+        return parkingLotLocation;
+    }
+
+    public void setParkingLotLocation(String parkingLotLocation) {
+        this.parkingLotLocation = parkingLotLocation;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
     }
 }

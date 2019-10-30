@@ -6,6 +6,7 @@ import ita.tw.afs.spark.dto.OrdersResponse;
 import ita.tw.afs.spark.model.Orders;
 import ita.tw.afs.spark.repository.OrdersRepository;
 import ita.tw.afs.spark.repository.ReservationRepository;
+import ita.tw.afs.spark.service.LogsService;
 import ita.tw.afs.spark.service.OrdersService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +38,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrdersControllerTest {
 
     @MockBean
-    OrdersService ordersService;
+    private OrdersService ordersService;
 
     @MockBean
-    OrdersRepository ordersRepository;
+    private OrdersRepository ordersRepository;
+
+    @MockBean
+    private LogsService logsService;
 
     @MockBean
     ReservationRepository reservationRepository;
