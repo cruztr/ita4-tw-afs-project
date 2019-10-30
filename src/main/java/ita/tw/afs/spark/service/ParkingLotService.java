@@ -7,6 +7,7 @@ import ita.tw.afs.spark.model.ParkingLot;
 import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.repository.ParkingBlockRepository;
 import ita.tw.afs.spark.repository.ParkingLotRepository;
+import ita.tw.afs.spark.repository.ReservationRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class ParkingLotService {
 
     @Autowired
     private ParkingBlockRepository parkingBlockRepo;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     public ParkingLot saveLotAndCreateBlocks(ParkingLot parkingLot) throws NotFoundException {
         if(!parkingLot.getName().isEmpty()
@@ -137,5 +141,9 @@ public class ParkingLotService {
             parkingLotResponses.add(parkingLotMapper.mappedResponse(status));
         }
         return parkingLotResponses;
+    }
+
+    public Reservation getReservation(Long id, Integer position) {
+        return reservationRepository.findReservationByParkingLotIdAndPositionAndStatus(id, position, "RESERVED");
     }
 }

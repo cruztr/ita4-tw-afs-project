@@ -35,6 +35,7 @@ public class OrdersService {
     private static final int BONUS_HOUR = 1;
     private static final String OPEN = "OPEN";
     public static final String CONFIRMED = "CONFIRMED";
+    public static final String N_A = "N/A";
 
     @Autowired
     OrdersRepository ordersRepository;
@@ -100,9 +101,16 @@ public class OrdersService {
     }
 
     public Optional<Orders> getOrderById(Long orderId) throws NotFoundException {
-        Optional<Orders> checkIfOrderExists = ordersRepository.findById(orderId);
-        if (checkIfOrderExists.isPresent())
-            return checkIfOrderExists;
+        Optional<Orders> ordersOptional = ordersRepository.findById(orderId);
+        if (ordersOptional.isPresent()) {
+            if(!ordersOptional.get().getStatus().equals(CLOSED)){
+                Double price = computeOrderPrice(ordersOptional.get().getTimeIn(),
+                        getCurrentDateTime(), ordersOptional.get().getParkingLotId());
+                ordersOptional.get().setTimeOut(N_A);
+                ordersOptional.get().setPrice(price);
+            }
+            return ordersOptional;
+        }
 
         throw new NotFoundException(OBJECT_NOT_FOUND);
     }

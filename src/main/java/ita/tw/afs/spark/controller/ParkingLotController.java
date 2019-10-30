@@ -2,6 +2,7 @@ package ita.tw.afs.spark.controller;
 
 import ita.tw.afs.spark.dto.ParkingLotResponse;
 import ita.tw.afs.spark.model.ParkingLot;
+import ita.tw.afs.spark.model.Reservation;
 import ita.tw.afs.spark.service.ParkingLotService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,11 @@ public class ParkingLotController {
     @ResponseStatus(value = HttpStatus.OK)
     public List<ParkingLotResponse> getParkingLotsAvailability(){
         return parkingLotService.getParkingLotsWithStatus();
+    }
+
+    @GetMapping(path = "/{id}/parkingBlock/{position}", produces = {"application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public Reservation getReservation(@PathVariable Long id, @PathVariable Integer position){
+        return parkingLotService.getReservation(id, position);
     }
 }

@@ -9,4 +9,6 @@ public interface CarOwnerRepository extends JpaRepository<CarOwner, Long> {
     CarOwner findByUsernameAndPassword(String username, String password);
 
     CarOwner findByUsername(String username);
+
+    CarOwner findCarOwnerById(Long id);
 }
